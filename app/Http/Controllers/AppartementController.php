@@ -13,7 +13,7 @@ class AppartementController extends Controller
     public function index()
     {
         $appartements = Appartement::query()
-            ->select(['name', 'address', 'price', 'image', 'user_id'])
+            ->select(['id', 'name', 'address', 'price', 'image', 'user_id'])
             ->latest()
             ->with(['user:id,name'])
             ->paginate(10);
@@ -69,7 +69,7 @@ class AppartementController extends Controller
      */
     public function show(Appartement $appartement)
     {
-        //
+        return view('appartement.show');
     }
 
     /**

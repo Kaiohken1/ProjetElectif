@@ -1,15 +1,20 @@
 <x-app-layout>
-    @forelse ($appartements as $appartement)
-        <div class="mb-3">
-            <article>
-                <h1>{{ $appartement->name }}</h1>
-                <img src="{{ Storage::url($appartement->image) }}" width="200px"></a>
-                <p>{{ $appartement->address }}</p>
-                <p>{{ $appartement->price }}</p>
-                <p>Loué par {{ $appartement->user->name }}</p>
-            </article>
-        </div>
-    @empty
-        Aucun appartement disponible
-    @endforelse
+    <div class="flex justify-center">
+        @forelse ($appartements as $appartement)
+            <div class="mt-9 ml-11">
+                <a href="{{ route('appart.show', $appartement->id) }}" class="block">
+                    <article>
+                        <img class="rounded-md" src="{{ Storage::url($appartement->image) }}" width="200px">
+                        <h1 class="text-2xl font-extrabold">{{ $appartement->name }}</h1>
+                        <p>{{ $appartement->address }}</p>
+                        <p>Loué par {{ $appartement->user->name }}</p>
+                        <p><span class="font-extrabold">{{ $appartement->price }}€</span> par nuit</p>
+                    </article>
+                </a>
+            </div>
+        @empty
+            Aucun appartement disponible..
+            <a href="{{route('appart.create')}}">Et si vous proposiez le votre ?</a>
+        @endforelse
+    </div>
 </x-app-layout>
