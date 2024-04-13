@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Appartement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 
 class AppartementController extends Controller
@@ -31,7 +33,7 @@ class AppartementController extends Controller
 
     $appartements = $user->appartement;
 
-    return view('appartements.index', [
+    return view('appartements.userIndex', [
         'appartements' => $appartements
     ]);
 }
@@ -95,6 +97,11 @@ class AppartementController extends Controller
     public function edit($id)
     {
         $appartement = Appartement::findOrFail($id);
+
+        Gate::authorize('update', $appartement);
+
+
+        $appartement = Appartement::findOrFail($id);
         return view('appartements.edit', [
             'appartement' => $appartement,
         ]);
@@ -106,7 +113,9 @@ class AppartementController extends Controller
     public function update(Request $request, $id)
     {
         $appartement = Appartement::findOrFail($id);
-    
+
+        Gate::authorize('update', $appartement);
+
         $validatedData = $request->validate([
             'name' => ['required', 'string'],
             'address' => ['required', 'max:255'],
@@ -133,8 +142,14 @@ class AppartementController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Appartement $appartement)
+    public function destroy($id) : RedirectResponse
     {
-        //
+        $appartement = Appartement::findOrFail($id);
+
+        Gate::authorize('delete', $appartement);
+
+        $appartement->delete();
+
+        return redirect(url('/'));
     }
 }
