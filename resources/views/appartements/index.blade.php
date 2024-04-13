@@ -2,7 +2,7 @@
     <div class="flex justify-center">
         @forelse ($appartements as $appartement)
             <div class="mt-9 ml-11">
-                <a href="{{ route('appart.show', $appartement->id) }}" class="block">
+                <a href="{{ route('appart.show', $appartement) }}" class="block">
                     <article>
                         <img class="rounded-md" src="{{ Storage::url($appartement->image) }}" width="200px">
                         <h1 class="text-2xl font-extrabold">{{ $appartement->name }}</h1>
