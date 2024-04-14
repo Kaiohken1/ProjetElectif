@@ -3,7 +3,7 @@
         <div class="mt-9 ml-11">
             <article>
                 <h1 class="text-3xl font-extrabold">{{ $appartement->name }}</h1>
-                <img class="rounded-md" src="{{ Storage::url($appartement->image) }}">
+                <img class="rounded-md" src="{{ Storage::url($appartement->images->first()->image) }}">
                 <div class="flex justify-between mt-2">
                     <div class="mt-1">
                         <p class="text-xl"><span>{{ $appartement->guestCount }} voyageurs</span> ·

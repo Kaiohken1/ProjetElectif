@@ -44,12 +44,15 @@
         <textarea name="description" class="block mt-1 w-full"></textarea>
         <x-input-error :messages="$errors->get('description')" class="mt-2" />
     </div>
-    
+
     <div>
-        <x-input-label for="image" :value="__('Image')" />
-        <input type="file" id="image" name="image"/>
+        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="multiple_files">Ajoutez vos images</label>
+        <input
+            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+            id="image" type="file" name='image[]' multiple>
+    
         <x-input-error :messages="$errors->get('image')" class="mt-2" />
-    </div>
+    </div>    
 
 
     <x-primary-button class="ms-3 mt-5 ml-0">

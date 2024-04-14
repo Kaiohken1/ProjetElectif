@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appartement;
+use App\Models\AppartementImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -59,25 +60,36 @@ class AppartementController extends Controller
             'roomCount' => ['required', 'numeric'],   
             'description' => ['required', 'max:255'],   
             'price' => ['required', 'numeric'],
-            'image' => ['image'],   
+            'image' => ['array'],
+            'image.*' => ['image'],  
         ]);
 
+        unset($validateData['image']);
+    
         $validateData['user_id'] = Auth()->id();
-
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('imagesAppart', 'public');
-            $validateData['image'] = $path;
-        }
-
+    
         $appartement = new Appartement($validateData);
-
+    
         $appartement->user()->associate($validateData['user_id']);
-
+    
         $appartement->save();
-
+    
+        if ($request->hasFile('image')) {
+            $images = $request->file('image');
+            
+            foreach ($images as $image) {
+                $path = $image->store('imagesAppart', 'public');
+                
+                $appartementImage = new AppartementImage();
+                $appartementImage->image = $path;
+                $appartementImage->appartement_id = $appartement->id;
+                $appartementImage->save();
+            }
+        }        
+    
         return redirect()->route('appart.index')
-        ->with('success', "Appartement créé avec succès");
-    }
+            ->with('success', "Appartement créé avec succès");
+    }    
 
     /**
      * Display the specified resource.
@@ -124,14 +136,24 @@ class AppartementController extends Controller
             'roomCount' => ['required', 'numeric'],   
             'description' => ['required', 'max:255'],   
             'price' => ['required', 'numeric'],
-            'image' => ['image'],   
+            'image' => ['array'],
+            'image.*' => ['image'],   
         ]);
-    
+
+        unset($validatedData['image']);
+
         if ($request->hasFile('image')) {
-            Storage::disk('public')->delete($appartement->image);
-            $path = $request->file('image')->store('imagesAppart', 'public');
-            $validatedData['image'] = $path;
-        }
+            $images = $request->file('image');
+            
+            foreach ($images as $image) {
+                $path = $image->store('imagesAppart', 'public');
+                
+                $appartementImage = new AppartementImage();
+                $appartementImage->image = $path;
+                $appartementImage->appartement_id = $appartement->id;
+                $appartementImage->save();
+            }
+        }  
     
         $appartement->update($validatedData);
     

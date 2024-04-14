@@ -3,10 +3,11 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Modifer les informations de votre appartement') }}
         </h2>
-        @if(session('success'))
-        <div class="p-4 mb-3 mt-3 text-center text-sm text-green-800 rounded-lg bg-green-50 dark:text-green-600" role="alert">
-            {{ session('success') }}
-        </div>
+        @if (session('success'))
+            <div class="p-4 mb-3 mt-3 text-center text-sm text-green-800 rounded-lg bg-green-50 dark:text-green-600"
+                role="alert">
+                {{ session('success') }}
+            </div>
         @endif
     </x-slot>
 
@@ -69,9 +70,18 @@
                         </div>
 
                         <div>
-                            <x-input-label for="image" :value="__('Image')" />
-                            <img class="rounded-md mb-3" src="{{ Storage::url($appartement->image) }}" width="200px">
-                            <input type="file" id="image" name="image" />
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                for="multiple_files">Vos images</label>
+                                <div class="flex space-x-8">
+                            @foreach ($appartement->images as $image)
+                                <img class="rounded-md mb-3" src="{{ Storage::url($image->image) }}"
+                                    width="200px">
+                            @endforeach
+                                </div>
+                            <input
+                                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                id="image" type="file" name='image[]' multiple>
+
                             <x-input-error :messages="$errors->get('image')" class="mt-2" />
                         </div>
 
