@@ -2,10 +2,16 @@
     <div class="flex justify-center">
         <div class="mt-9 ml-11">
             <article>
-                <h1 class="text-3xl font-extrabold">{{ $appartement->name }}</h1>
-                <img class="rounded-md" src="{{ Storage::url($appartement->images->first()->image) }}">
+                <div class="grid grid-cols-2 gap-2">
+                    @foreach ($appartement->images as $image)
+                        <div class="w-full">
+                            <img class="h-72 max-w-full rounded-lg" src="{{ Storage::url($image->image) }}" width="100%">
+                        </div>
+                    @endforeach
+                </div>
                 <div class="flex justify-between mt-2">
                     <div class="mt-1">
+                        <h1 class="text-3xl font-extrabold">{{ $appartement->name }}</h1>
                         <p class="text-xl"><span>{{ $appartement->guestCount }} voyageurs</span> ·
                             <span>{{ $appartement->roomCount }} chambres</span>
                         </p>
