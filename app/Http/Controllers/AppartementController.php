@@ -53,7 +53,7 @@ class AppartementController extends Controller
     public function store(Request $request)
     {
         $validateData = $request->validate([
-            'name' => ['required', 'alpha'],
+            'name' => ['required', 'max:255', 'regex:/^[a-zA-Z\s]*$/'],
             'address' => ['required', 'max:255'],
             'surface' => ['required', 'numeric'],   
             'guestCount' => ['required', 'numeric'],   
@@ -145,6 +145,13 @@ class AppartementController extends Controller
         if ($request->hasFile('image')) {
             $images = $request->file('image');
             
+            $appartementImages = AppartementImage::where('appartement_id', $appartement->id)->get();
+    
+            if($appartementImages->count() >= 4) {
+                return redirect()->route('appart.edit', $appartement->id)
+                    ->with('error', "Il y a déjà 4 images pour votre appartement. Pour en ajouter une nouvelle, veuillez en supprimer une autre.");
+            }
+
             foreach ($images as $image) {
                 $path = $image->store('imagesAppart', 'public');
                 
@@ -173,5 +180,16 @@ class AppartementController extends Controller
         $appartement->delete();
 
         return redirect(url('/'));
+    }
+
+    public function destroyImage($id) : RedirectResponse {
+        $appartementImages = AppartementImage::findOrFail($id);
+
+        Gate::authorize('delete', $appartementImages->appartement_id);
+
+        $appartementImages->delete();
+
+        return redirect()->route('appart.edit', $appartementImages->appartement_id)
+        ->with('success', "Appartement mis à jour avec succès");
     }
 }

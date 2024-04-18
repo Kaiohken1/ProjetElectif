@@ -2,13 +2,18 @@
     <div class="flex justify-center">
         <div class="mt-9 ml-11">
             <article>
-                <div class="grid grid-cols-2 gap-2">
-                    @foreach ($appartement->images as $image)
-                        <div class="w-full">
-                            <img class="h-72 max-w-full rounded-lg" src="{{ Storage::url($image->image) }}" width="100%">
-                        </div>
-                    @endforeach
-                </div>
+                @if (count($appartement->images) == 1)
+                    <img class="rounded-md" src="{{ Storage::url($appartement->images->first()->image) }}" width="100%">
+                @else
+                    <div class="grid grid-cols-2 gap-2">
+                        @foreach ($appartement->images as $image)
+                            <div class="w-full">
+                                <img class="h-72 max-w-full rounded-lg" src="{{ Storage::url($image->image) }}"
+                                    width="100%">
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
                 <div class="flex justify-between mt-2">
                     <div class="mt-1">
                         <h1 class="text-3xl font-extrabold">{{ $appartement->name }}</h1>
@@ -21,6 +26,10 @@
                     <div class="p-4 sm:p-8 bg-white sm:rounded-lg shadow-xl">
                         <p class="text-xl"><span class="font-extrabold">{{ $appartement->price }}€</span> par nuit</p>
                     </div>
+                </div>
+
+                <div class="border-t-2 border-grey mt-10">
+                    <p class="text-2xl">{{ $appartement->description }}</p>
                 </div>
             </article>
         </div>

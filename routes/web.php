@@ -16,5 +16,6 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/', [AppartementController::class, 'index'])->name('appart.index');
+Route::destroy('/appart/image/{id}', [AppartementController::class, 'destroyImage'])->name('appart.image.destroy');
 
 require __DIR__ . '/auth.php';
