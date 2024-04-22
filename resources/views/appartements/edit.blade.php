@@ -79,14 +79,26 @@
                                 for="multiple_files">Vos images</label>
                             <div class="flex space-x-8">
                                 @foreach ($appartement->images as $image)
-                                    <img class="rounded-md mb-3" src="{{ Storage::url($image->image) }}" width="200px">
+                                    <div class="relative">
+                                        <img class="rounded-md mb-3" src="{{ Storage::url($image->image) }}"
+                                            width="200px">
+                                        @if ($appartement->images->count() > 1)    
+                                        <form action="{{ route('appart.image.delete', ['id' => $image->id]) }}"
+                                            method="POST" class="absolute top-0 right-0">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="text-red-500 hover:text-red-700 focus:outline-none">
+                                                Supprimer
+                                            </button>
+                                        </form>
+                                        @endif
+                                    </div>
                                 @endforeach
                             </div>
-
                             @if ($appartement->images->count() <= 5)
-                                <input
-                                    class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                                    id="image" type="file" name='image[]' multiple>
+                                <input class="file-input w-full max-w-xs" id="image" type="file" name='image[]'
+                                    multiple>
                                 <x-input-error :messages="$errors->get('image')" class="mt-2" />
                             @endif
                         </div>

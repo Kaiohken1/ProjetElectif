@@ -17,8 +17,12 @@ export default {
         },
     },
 
+    daisyui: {
+        themes: [],
+     },
+
     plugins: [
         forms,
-        require('flowbite/plugin')
+        require("daisyui"),
     ],
 };
