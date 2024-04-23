@@ -37,7 +37,7 @@ class AppartementPolicy
      */
     public function update(User $user, Appartement $appartement)
     {
-        return $user->id === $appartement->users_id;
+        return $user->id === $appartement->user_id;
     }
 
     /**
@@ -45,7 +45,7 @@ class AppartementPolicy
      */
     public function delete(User $user, Appartement $appartement)
     {
-        return $user->id === $appartement->users_id;
+        return $user->id === $appartement->user_id;
     }
 
     /**

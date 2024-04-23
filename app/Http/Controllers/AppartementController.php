@@ -133,14 +133,15 @@ class AppartementController extends Controller
         $validatedData = $request->validate([
             'name' => ['required', 'string'],
             'address' => ['required', 'max:255'],
-            'surface' => ['required', 'numeric'],   
-            'guestCount' => ['required', 'numeric'],   
-            'roomCount' => ['required', 'numeric'],   
-            'description' => ['required', 'max:255'],   
-            'price' => ['required', 'numeric'],
+            'surface' => ['required', 'numeric', 'min:0'], 
+            'guestCount' => ['required', 'numeric', 'min:0'], 
+            'roomCount' => ['required', 'numeric', 'min:0'], 
+            'description' => ['required', 'max:255'],
+            'price' => ['required', 'numeric', 'min:0'], 
             'image' => ['array'],
-            'image.*' => ['image'],   
+            'image.*' => ['image'],
         ]);
+        
 
         unset($validatedData['image']);
 
