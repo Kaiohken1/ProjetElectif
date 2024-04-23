@@ -18,6 +18,11 @@
                     <x-nav-link :href="route('appart.create')" :active="request()->routeIs('appart.create')">
                         {{ __('Louer mon logement') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('reservation')" :active="request()->routeIs('reservation')">
+                        {{ __('Mes réservations') }}
+                    </x-nav-link>
+                    
+                    
                 </div>
             </div>
 

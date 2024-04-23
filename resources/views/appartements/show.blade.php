@@ -14,6 +14,8 @@
                     </div>
                     <div class="p-4 sm:p-8 bg-white sm:rounded-lg shadow-xl">
                         <p class="text-xl"><span class="font-extrabold">{{ $appartement->price }}€</span> par nuit</p>
+                     
+                        <a href="{{ route('reservation.create', ['appartement_id' => $appartement->id]) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 inline-block">Réserver</a>
                     </div>
                 </div>
             </article>
