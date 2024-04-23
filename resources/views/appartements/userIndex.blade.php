@@ -21,6 +21,10 @@
                         <x-danger-button> Supprimer</x-danger-button>
                     </form>
                 </div>
+
+                <a href="{{ route('reservation.showAll', $appartement) }}" class="mr-2">
+                    <x-primary-button>Réservations</x-primary-button>
+                </a>
             </div>
         @empty
             <p>Vous n'avez aucun appartement</p>

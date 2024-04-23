@@ -13,13 +13,13 @@ class ReservationController extends Controller
     /**
      * Display a listing of the resource.
      */
-        public function index()
-        {
-        
-            $reservations = Reservation::where('user_id', Auth::id())->get();
-            return view('Reservation.index', ['reservations' => $reservations]);
-        }    
-    
+    public function index()
+    {
+
+        $reservations = Reservation::where('user_id', Auth::id())->get();
+        return view('Reservation.index', ['reservations' => $reservations]);
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -28,10 +28,10 @@ class ReservationController extends Controller
     {
 
         $appartement_id = $request->route('appartement_id');
-    
+
         // if (!$appartement_id) {
         // }
-    
+
         $selectedAppartement = Appartement::find($appartement_id);
         $appartements = Appartement::all();
         $prixAppartement = $selectedAppartement->prix;
@@ -43,8 +43,8 @@ class ReservationController extends Controller
             'prixAppartement' => $prixAppartement,
         ]);
     }
-    
-    
+
+
     /**
      * Store a newly created resource in storage.
      */
@@ -56,25 +56,25 @@ class ReservationController extends Controller
             'end_time' => ['required', 'date'],
             'nombre_de_personne' => ['required', 'numeric'],
             // 'commentaire' => ['max:255'],
-            'appartement_id' => ['required', 'exists:appartements,id'], 
-            'prix'=>['required', 'numeric'],
+            'appartement_id' => ['required', 'exists:appartements,id'],
+            'prix' => ['required', 'numeric'],
         ]);
-    
+
         $reservation = new Reservation();
         $reservation->appartement_id = $request->input('appartement_id');
-            $userId = Auth::id();
-            $reservation->user_id = $userId;
+        $userId = Auth::id();
+        $reservation->user_id = $userId;
         $reservation->start_time = $validatedData['start_time'];
         $reservation->end_time = $validatedData['end_time'];
         $reservation->nombre_de_personne = $validatedData['nombre_de_personne'];
         $reservation->prix = $validatedData['prix'];
         // $reservation->commentaire = $validatedData['commentaire'];
-    
+
         $reservation->save();
         return redirect()->route('reservation.index')->with('success', "Réservation bien prise en compte");
     }
-    
-   
+
+
 
     /**
      * Display the specified resource.
@@ -82,8 +82,8 @@ class ReservationController extends Controller
     public function show($id)
     {
         $reservation = Reservation::findOrFail($id);
-        
-        return view('Reservation.index', ['reservation'=> $reservation]);
+
+        return view('Reservation.index', ['reservation' => $reservation]);
     }
 
     /**
@@ -93,9 +93,7 @@ class ReservationController extends Controller
     {
         $reservation = Reservation::findOrFail($id);
 
-        return view('Reservation.edit', ['reservation'=>$reservation]);
-
-
+        return view('Reservation.edit', ['reservation' => $reservation]);
     }
 
     /**
@@ -103,26 +101,26 @@ class ReservationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
-    $validatedData = $request->validate([
-        'start_time' => ['required', 'date'],
-        'end_time' => ['required', 'date'],
-        'nombre_de_personne' => ['required', 'numeric'],
-        'prix'=>['required', 'numeric'],
-    ]);
 
-    
-    $reservation = Reservation::findOrFail($id);
+        $validatedData = $request->validate([
+            'start_time' => ['required', 'date'],
+            'end_time' => ['required', 'date'],
+            'nombre_de_personne' => ['required', 'numeric'],
+            'prix' => ['required', 'numeric'],
+        ]);
 
-    $reservation->start_time = $validatedData['start_time'];
-    $reservation->end_time = $validatedData['end_time'];
-    $reservation->nombre_de_personne = $validatedData['nombre_de_personne'];
-    $reservation->prix = $validatedData['prix'];
-    $reservation->save();
 
- 
-    return redirect()->route('reservations.show', ['reservation' => $reservation->id])
-                     ->with('success', 'Reservation updated successfully');
+        $reservation = Reservation::findOrFail($id);
+
+        $reservation->start_time = $validatedData['start_time'];
+        $reservation->end_time = $validatedData['end_time'];
+        $reservation->nombre_de_personne = $validatedData['nombre_de_personne'];
+        $reservation->prix = $validatedData['prix'];
+        $reservation->save();
+
+
+        return redirect()->route('reservations.show', ['reservation' => $reservation->id])
+            ->with('success', 'Reservation updated successfully');
     }
 
     /**
@@ -130,13 +128,32 @@ class ReservationController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-         
- 
- $reservation = Reservation::findOrFail($id);
 
- $reservation->delete();
+        $reservation = Reservation::findOrFail($id);
 
- return redirect()->route('reservation.index')
-                  ->with('success', 'Reservation deleted successfully');
-}
+        $reservation->delete();
+
+        return redirect()->route('reservation.index')
+            ->with('success', 'Reservation deleted successfully');
+    }
+
+    public function validate($id) {
+        Reservation::where('id', $id)->update(['status' => 'Validé']);
+
+        return redirect()->back()
+            ->with('success', 'La reservation a été validée avec succès');
+    }
+
+    public function refused($id) {
+        Reservation::where('id', $id)->update(['status' => 'Refusé']);
+
+        return redirect()->back()
+            ->with('success', 'La reservation a été refusée avec succès');
+    }
+
+
+    public function showAll($appartement_id) {
+        $reservations = Reservation::where('appartement_id', $appartement_id)->get();
+        return view('Reservation.showAll', ['reservations' => $reservations]);
+    }
 }
