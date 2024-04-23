@@ -153,7 +153,13 @@ class ReservationController extends Controller
 
 
     public function showAll($appartement_id) {
-        $reservations = Reservation::where('appartement_id', $appartement_id)->get();
-        return view('Reservation.showAll', ['reservations' => $reservations]);
+        $reservations = Reservation::where('appartement_id', $appartement_id)
+            ->latest('created_at')
+            ->paginate(15);
+    
+        $appartement_name = Appartement::findOrFail($appartement_id)->name;
+    
+        return view('Reservation.showAll', compact('reservations', 'appartement_name'));
     }
+    
 }

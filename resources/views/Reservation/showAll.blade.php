@@ -1,11 +1,17 @@
 <x-app-layout>
-    @if (session('success'))
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Réservation de l\'appartement : ' . $appartement_name) }}
+        </h2>
+
+        @if (session('success'))
         <div class="p-4 mb-3 mt-3 text-center text-sm text-green-800 rounded-lg bg-yellow-50  dark:text-green-600"
             role="alert">
             {{ session('success') }}
         </div>
     @endif
 
+    </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -17,6 +23,7 @@
                         <th class="py-3 px-6 text-left">Prix</th>
                         <th class="py-3 px-6 text-left">Date de début</th>
                         <th class="py-3 px-6 text-left">Date de fin</th>
+                        <th class="py-3 px-6 text-left">Date de réservation</th>
                         <th class="py-3 px-6 text-left">Status</th>
                         <th class="py-3 px-6 text-center">Action</th>
                     </tr>
@@ -29,6 +36,7 @@
                             <td class="py-3 px-6 text-left">{{ $reservation->prix }}€</td>
                             <td class="py-3 px-6 text-left">{{ $reservation->start_time }}</td>
                             <td class="py-3 px-6 text-left">{{ $reservation->end_time }}</td>
+                            <td class="py-3 px-6 text-left">{{ $reservation->created_at }}</td>
                             <td class="py-3 px-6 text-left">{{ $reservation->status }}</td>
                             @if ($reservation->status === 'pending')
                                 <td class="py-3 px-6 text-center">
@@ -67,6 +75,8 @@
                     </tbody>
                 @endforeach
             </table>
+            {{ $reservations->links() }}
+
         </div>
     </div>
 </x-app-layout>
