@@ -3,7 +3,6 @@
 use App\Http\Controllers\AppartementController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservationController;
-use App\Http\Controllers\ReservationController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
