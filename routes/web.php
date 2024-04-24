@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AppartementController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReservationController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AppartementImageController;
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -15,8 +15,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [AppartementController::class, 'userIndex'])->name('dashboard');
 
     Route::delete('/appart-image/{id}', [AppartementImageController::class, 'destroy'])->name('appart.image.delete');
-
-
+    Route::get('/reservation', [ReservationController::class, 'index'])->name('reservation');
 });
 
 Route::get('/', [AppartementController::class, 'index'])->name('appart.index');
