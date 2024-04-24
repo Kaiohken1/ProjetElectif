@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appartement;
+use App\Models\Tag;
 use App\Models\AppartementImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,15 +18,25 @@ class AppartementController extends Controller
      */
     public function index()
     {
+        
         $appartements = Appartement::query()
             ->select(['id', 'name', 'address', 'price', 'image', 'user_id'])
             ->latest()
             ->with(['user:id,name'])
+            ->with(['tags:*'])
+            ->with(['images:*'])
             ->paginate(10);
 
         return view('appartements.index', [
             'appartements' => $appartements
         ]);
+        
+
+       /* $appartements = Appartement::with('tags','images','user');
+        return view('appartements.index', [
+            'appartements' => $appartements
+        ]);
+        */
     }
 
     public function userIndex()
@@ -33,7 +44,7 @@ class AppartementController extends Controller
     $user = Auth::user();
 
     $appartements = $user->appartement;
-
+    
     return view('appartements.userIndex', [
         'appartements' => $appartements
     ]);
@@ -44,7 +55,10 @@ class AppartementController extends Controller
      */
     public function create()
     {
-        return view('appartements.create');
+        $tags = Tag::all();
+        return view('appartements.create',[
+            'tags' => $tags
+        ]);
     }
 
     /**
@@ -61,7 +75,8 @@ class AppartementController extends Controller
             'description' => ['required', 'max:255'],   
             'price' => ['required', 'numeric'],
             'image' => ['array'],
-            'image.*' => ['image'],  
+            'image.*' => ['image'],
+            'tag_id' => ['array']
         ]);
 
         unset($validateData['image']);
@@ -69,11 +84,12 @@ class AppartementController extends Controller
         $validateData['user_id'] = Auth()->id();
     
         $appartement = new Appartement($validateData);
-    
+        
         $appartement->user()->associate($validateData['user_id']);
     
         $appartement->save();
-    
+        $appartement->tags()->sync($validateData['tag_id']);
+
         if ($request->hasFile('image')) {
             $images = $request->file('image');
             
