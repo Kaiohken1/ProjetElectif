@@ -16,15 +16,18 @@
                         <x-primary-button>Editer</x-primary-button>
                     </a>
 
-                        <form action="{{ route('appart.destroy', $appartement) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <x-danger-button> Supprimer</x-danger-button>
-                        </form>
-                    </div>
+                    <form action="{{ route('appart.destroy', $appartement) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <x-danger-button> Supprimer</x-danger-button>
+                    </form>
                 </div>
-            @empty
-        </div>
+
+                <a href="{{ route('reservation.showAll', $appartement) }}" class="mr-2">
+                    <x-primary-button>Réservations</x-primary-button>
+                </a>
+            </div>
+        @empty
             <p>Vous n'avez aucun appartement</p>
             <a href="{{ route('appart.create') }}" class="font-bold">Mettez votte bien à disposition dès maintenant</a>
         @endforelse
