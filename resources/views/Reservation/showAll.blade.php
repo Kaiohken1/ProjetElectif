@@ -34,9 +34,9 @@
                             <td class="py-3 px-6 text-left">{{ $reservation->appartement->name }}</td>
                             <td class="py-3 px-6 text-left">{{ $reservation->user->name }}</td>
                             <td class="py-3 px-6 text-left">{{ $reservation->prix }}€</td>
-                            <td class="py-3 px-6 text-left">{{ $reservation->start_time }}</td>
-                            <td class="py-3 px-6 text-left">{{ $reservation->end_time }}</td>
-                            <td class="py-3 px-6 text-left">{{ $reservation->created_at }}</td>
+                            <td class="py-3 px-6 text-left">{{ \Carbon\Carbon::parse($reservation->start_time)->format('d/m/Y') }}</td>
+                            <td class="py-3 px-6 text-left">{{ \Carbon\Carbon::parse($reservation->end_time)->format('d/m/Y') }}</td>
+                            <td class="py-3 px-6 text-left">{{ \Carbon\Carbon::parse($reservation->created_at)->format('d/m/Y H:i:s') }}</td>
                             <td class="py-3 px-6 text-left">{{ $reservation->status }}</td>
                             @if ($reservation->status === 'pending')
                                 <td class="py-3 px-6 text-center">

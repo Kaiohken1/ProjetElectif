@@ -18,7 +18,7 @@ class ReservationController extends Controller
 
         $reservations = Reservation::where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(15);
 
         // Passer les réservations à la vue
         return view('Reservation.index', ['reservations' => $reservations]);
