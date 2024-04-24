@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use App\Events\Reservation;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use App\Listeners\ReservationNotifcation;
@@ -26,5 +29,14 @@ class AppServiceProvider extends ServiceProvider
             Reservation::class,
             ReservationNotifcation::class,
         );
+
+        View::composer('layouts.navigation', function ($view) {
+            if (Auth::check()) {
+                $user = User::findOrFail(Auth()->id());
+                $notifications = $user->notifications()->latest()->paginate(10);
+                $view->with('notifications', $notifications)
+                     ->with('user', $user);
+            }
+        });        
     }
 }

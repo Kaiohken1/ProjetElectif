@@ -33,37 +33,6 @@
                                 <td class="py-3 px-6 text-left">{{ \Carbon\Carbon::parse($reservation->end_time)->format('d/m/Y') }}</td>
                                 <td class="py-3 px-6 text-left">{{ \Carbon\Carbon::parse($reservation->created_at)->format('d/m/Y H:i:s') }}</td>
                                 <td class="py-3 px-6 text-left">{{ $reservation->status }}</td>
-                                @if ($reservation->status === 'pending')
-                                    <td class="py-3 px-6 text-center">
-                                        <form method="POST" action="{{ route('reservation.validate', $reservation) }}"
-                                            class="inline">
-                                            @csrf
-                                            @method('PATCH')
-                                            <button type="submit" class="text-green-500 hover:text-green-700 ml-2">
-                                                <svg class="w-5 h-5 inline-block" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M9 5l7 7-7 7"></path>
-                                                </svg>
-                                                <span class="ml-1 mr-3">Valider</span>
-                                            </button>
-                                        </form>
-                                        <form method="POST" action="{{ route('reservation.refused', $reservation) }}"
-                                            class="inline">
-                                            @csrf
-                                            @method('PATCH')
-                                            <button type="submit" class="text-red-500 hover:text-red-700"
-                                                onclick="return confirm('Êtes-vous sûr de vouloir refuser cette réservation ?')">
-                                                <svg class="w-5 h-5 inline-block" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M6 18L18 6M6 6l12 12"></path>
-                                                </svg>
-                                                <span class="ml-1">Refuser</span>
-                                            </button>
-                                        </form>
-                                    </td>
-                                @endif
                             </tr>
                         </tbody>
                     @endforeach

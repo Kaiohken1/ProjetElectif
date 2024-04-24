@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\AppartementController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ReservationController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AppartementController;
+use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\NotificationsController;
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -21,7 +22,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/reservation/validate/{id}', [ReservationController::class, 'validate'])->name('reservation.validate');
     Route::patch('/reservation/refused/{id}', [ReservationController::class, 'refused'])->name('reservation.refused');
     Route::get('/reservation/{id}', [ReservationController::class, 'showAll'])->name('reservation.showAll');
-
+    Route::resource('notifcations', NotificationsController::class);
 });
 
 Route::get('/', [AppartementController::class, 'index'])->name('appart.index');
