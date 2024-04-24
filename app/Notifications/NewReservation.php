@@ -49,7 +49,7 @@ class NewReservation extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'reservation_id' => $this->reservation->id,
+            'appartement_id' => $this->reservation->appartement->id,
             'message' => 'Votre appartement a été soumis à une nouvelle réservation.',
         ];
     }
