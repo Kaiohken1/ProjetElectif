@@ -16,7 +16,11 @@ class ReservationController extends Controller
     public function index()
     {
 
-        $reservations = Reservation::where('user_id', Auth::id())->get();
+        $reservations = Reservation::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Passer les réservations à la vue
         return view('Reservation.index', ['reservations' => $reservations]);
     }
 
@@ -137,14 +141,16 @@ class ReservationController extends Controller
             ->with('success', 'Reservation deleted successfully');
     }
 
-    public function validate($id) {
+    public function validate($id)
+    {
         Reservation::where('id', $id)->update(['status' => 'Validé']);
 
         return redirect()->back()
             ->with('success', 'La reservation a été validée avec succès');
     }
 
-    public function refused($id) {
+    public function refused($id)
+    {
         Reservation::where('id', $id)->update(['status' => 'Refusé']);
 
         return redirect()->back()
@@ -152,14 +158,14 @@ class ReservationController extends Controller
     }
 
 
-    public function showAll($appartement_id) {
+    public function showAll($appartement_id)
+    {
         $reservations = Reservation::where('appartement_id', $appartement_id)
             ->latest('created_at')
             ->paginate(15);
-    
+
         $appartement_name = Appartement::findOrFail($appartement_id)->name;
-    
+
         return view('Reservation.showAll', compact('reservations', 'appartement_name'));
     }
-    
 }

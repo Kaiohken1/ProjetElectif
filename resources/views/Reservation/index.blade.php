@@ -24,8 +24,8 @@
                         @foreach($reservations as $reservation)
                             <tr class="border-b border-gray-200 hover:bg-gray-100">
                                 <td class="py-3 px-6 text-left">{{ $reservation->appartement->name }}</td>
-                                <td class="py-3 px-6 text-left">{{ $reservation->start_time }}</td>
-                                <td class="py-3 px-6 text-left">{{ $reservation->end_time }}</td>
+                                <td class="py-3 px-6 text-left">{{ \Carbon\Carbon::parse($reservation->start_time)->format('d/m/Y') }}</td>
+                                <td class="py-3 px-6 text-left">{{ \Carbon\Carbon::parse($reservation->end_time)->format('d/m/Y') }}</td>
                             </tr>
                         @endforeach
                     </tbody>
