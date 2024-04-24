@@ -23,6 +23,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/reservation/refused/{id}', [ReservationController::class, 'refused'])->name('reservation.refused');
     Route::get('/reservation/{id}', [ReservationController::class, 'showAll'])->name('reservation.showAll');
     Route::resource('notifcations', NotificationsController::class);
+    Route::post('/reservation/{id}/cancel', [ReservationController::class, 'cancel'])->name('reservation.cancel');
+
 });
 
 Route::get('/', [AppartementController::class, 'index'])->name('appart.index');

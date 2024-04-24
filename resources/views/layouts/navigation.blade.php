@@ -63,12 +63,15 @@
                         </x-slot>
                         <x-slot name="content">
                             @foreach ($notifications as $notification)
+                            @if(isset($notification->data['appartement_id']))
                                 <a href="{{ route('reservation.showAll', $notification->data['appartement_id']) }}"
                                     class="block px-4 py-2 text-sm text-gray-800 hover:bg-gray-100">
                                     {{ $notification->data['message'] }}
                                 </a>
                                 {{ $user->unreadNotifications->markAsRead() }}
-                            @endforeach
+                            @endif
+                        @endforeach
+                        
                         </x-slot>
 
                     </x-dropdown>

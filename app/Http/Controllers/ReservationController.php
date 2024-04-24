@@ -53,30 +53,45 @@ class ReservationController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        //  dd($request->all());
-        $validatedData = $request->validate([
-            'start_time' => ['required', 'date'],
-            'end_time' => ['required', 'date'],
-            'nombre_de_personne' => ['required', 'numeric'],
-            // 'commentaire' => ['max:255'],
-            'appartement_id' => ['required', 'exists:appartements,id'],
-            'prix' => ['required', 'numeric'],
-        ]);
+{
+    
+    $validatedData = $request->validate([
+        'start_time' => ['required', 'date'],
+        'end_time' => ['required', 'date'],
+        'nombre_de_personne' => ['required', 'numeric'],
+        'appartement_id' => ['required', 'exists:appartements,id'],
+        'prix' => ['required', 'numeric'],
+    ]);
 
-        $reservation = new Reservation();
-        $reservation->appartement_id = $request->input('appartement_id');
-        $userId = Auth::id();
-        $reservation->user_id = $userId;
-        $reservation->start_time = $validatedData['start_time'];
-        $reservation->end_time = $validatedData['end_time'];
-        $reservation->nombre_de_personne = $validatedData['nombre_de_personne'];
-        $reservation->prix = $validatedData['prix'];
-        // $reservation->commentaire = $validatedData['commentaire'];
+   
+    $conflictingReservation = Reservation::where('appartement_id', $validatedData['appartement_id'])
+        ->where(function ($query) use ($validatedData) {
+            $query->whereBetween('start_time', [$validatedData['start_time'], $validatedData['end_time']])
+                  ->orWhereBetween('end_time', [$validatedData['start_time'], $validatedData['end_time']])
+                  ->orWhere(function ($query) use ($validatedData) {
+                      $query->where('start_time', '<=', $validatedData['start_time'])
+                            ->where('end_time', '>=', $validatedData['end_time']);
+                  });
+        })
+        ->exists();
 
-        $reservation->save();
-        return redirect()->route('reservation.index')->with('success', "Réservation bien prise en compte");
+   
+    if ($conflictingReservation) {
+        return redirect()->back()->withInput()->withErrors(['error' => 'Les dates choisies ne sont pas disponibles. Veuillez choisir d\'autres dates.']);
     }
+
+   
+    $reservation = new Reservation();
+    $reservation->appartement_id = $validatedData['appartement_id'];
+    $reservation->user_id = Auth::id();
+    $reservation->start_time = $validatedData['start_time'];
+    $reservation->end_time = $validatedData['end_time'];
+    $reservation->nombre_de_personne = $validatedData['nombre_de_personne'];
+    $reservation->prix = $validatedData['prix'];
+    $reservation->save();
+
+    return redirect()->route('reservation.index')->with('success', "Réservation bien prise en compte");
+}
 
 
 

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use id;
+use Carbon\Carbon;
 use App\Models\Appartement;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
 use App\Models\AppartementImage;
 use Illuminate\Support\Facades\Auth;
@@ -99,12 +101,20 @@ class AppartementController extends Controller
     public function show($id)
     {
         $appartement = Appartement::findOrFail($id);
-
-        return view('appartements.show', [
-            'appartement' => $appartement
-        ]);
+    
+        // Récupérer les dates déjà réservées pour cet appartement
+        $reservedDates = Reservation::where('appartement_id', $id)
+            ->get() // Récupérez toutes les réservations
+            ->map(function ($reservation) {
+                return [
+                    'start' => Carbon::parse($reservation->start_time)->toDateString(),
+                    'end' => Carbon::parse($reservation->end_time)->toDateString(),
+                ];
+            })
+            ->toArray();
+    
+        return view('appartements.show', compact('appartement', 'reservedDates'));
     }
-
     /**
      * Show the form for editing the specified resource.
      */
