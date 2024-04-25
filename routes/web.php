@@ -7,6 +7,7 @@ use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\AppartementImageController;
+use App\Models\Appartement;
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -17,7 +18,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('tag', TagController::class);
     Route::get('/dashboard', [AppartementController::class, 'userIndex'])->name('dashboard');
 
-    Route::delete('/appart-image/{id}', [AppartementImageController::class, 'destroy'])->name('appart.image.delete');
+    Route::delete('/appartimage/{id}', [AppartementController::class, 'destroyImg'])->name('appart.destroyImg');
 
     Route::get('/reservation', [ReservationController::class, 'index'])->name('reservation');
     Route::get('/reservation/{id}/edit', [ReservationController::class, 'edit'])->name('reservation.edit');

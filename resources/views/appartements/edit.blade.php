@@ -28,7 +28,7 @@
                         <div>
                             <x-input-label for="name" :value="__('Titre')" />
                             <x-text-input id="name" class="block mt-1 w-full" type="text" name="name"
-                                :value="old('name', $appartement->name)"/>
+                                :value="old('name', $appartement->name)" />
                             <x-input-error :messages="$errors->get('name')" class="mt-2" />
                         </div>
 
@@ -42,14 +42,14 @@
                         <div>
                             <x-input-label for="surface" :value="__('Surface (Au mètre carré)')" />
                             <x-text-input id="surface" class="block mt-1 w-full" type="number" name="surface"
-                                :value="old('surface', $appartement->surface)" min="1"/>
+                                :value="old('surface', $appartement->surface)" min="1" />
                             <x-input-error :messages="$errors->get('surface')" class="mt-2" />
                         </div>
 
                         <div>
                             <x-input-label for="guestCount" :value="__('Nombre de personnes')" />
                             <x-text-input id="guestCount" class="block mt-1 w-full" type="number" name="guestCount"
-                                :value="old('guestCount', $appartement->guestCount)" min="1"/>
+                                :value="old('guestCount', $appartement->guestCount)" min="1" />
                             <x-input-error :messages="$errors->get('guestCount')" class="mt-2" />
                         </div>
 
@@ -57,14 +57,14 @@
                         <div>
                             <x-input-label for="roomCount" :value="__('Nombre de pièces')" />
                             <x-text-input id="roomCount" class="block mt-1 w-full" type="number" name="roomCount"
-                                :value="old('roomCount', $appartement->roomCount)" min="1"/>
+                                :value="old('roomCount', $appartement->roomCount)" min="1" />
                             <x-input-error :messages="$errors->get('roomCount')" class="mt-2" />
                         </div>
 
                         <div>
                             <x-input-label for="price" :value="__('Prix par nuit')" />
                             <x-text-input id="price" class="block mt-1 w-full" type="number" name="price"
-                                :value="old('price', $appartement->price)" min="1"/>
+                                :value="old('price', $appartement->price)" min="1" />
                             <x-input-error :messages="$errors->get('price')" class="mt-2" />
                         </div>
 
@@ -75,47 +75,53 @@
                         </div>
 
                         <div>
-                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                for="multiple_files">Vos images</label>
-                            <div class="flex space-x-8">
-                                @foreach ($appartement->images as $image)
-                                    <div class="relative">
-                                        <img class="rounded-md mb-3 h-52" src="{{ Storage::url($image->image) }}"
-                                            width="200px">
-                                        @if ($appartement->images->count() > 1)    
-                                        <form action="{{ route('appart.image.delete', ['id' => $image->id]) }}"
-                                            method="POST" class="absolute top-0 right-0">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="text-red-500 hover:text-red-700 focus:outline-none">
-                                                Supprimer
-                                            </button>
-                                        </form>
-                                        @endif
-                                    </div>
-                                @endforeach
-                            </div>
-                            @if ($appartement->images->count() <= 5)
-                                <input class="file-input w-full max-w-xs" id="image" type="file" name='image[]'
-                                    multiple>
-                                <x-input-error :messages="$errors->get('image')" class="mt-2" />
-                            @endif
-                        </div>
-
-                        <div>
-                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="multiple_files">Ajoutez des tags</label>
+                            <x-input-label for="price" :value="__('Ajouter des tags')" />
                             <select class="chosen-select" multiple name="tag_id[]" id=tag_id>
-                                @foreach($tags as $tag)
-                                    <option value="{{$tag->id}}">{{$tag->name}}</option>
+                                @foreach ($tags as $tag)
+                                    <option value="{{ $tag->id }}">{{ $tag->name }}</option>
                                 @endforeach
                             </select>
                         </div>
+
+                        @if ($appartement->images->count() <= 5)
+                            <div>
+                                <x-input-label for="price" :value="__('Ajouter une nouveau image')" />
+                                <input class="file-input w-full max-w-xs" id="image" type="file" name='image[]'
+                                    multiple>
+                                <x-input-error :messages="$errors->get('image')" class="mt-2" />
+                            </div>
+                        @endif
+
 
                         <x-primary-button class="ms-3 mt-5 ml-0">
                             {{ __('Modifier mon appartement') }}
                         </x-primary-button>
                     </form>
+
+                    <div>
+                        <x-input-label for="price" :value="__('Vos images activées')" class="mt-5" />
+                        <div class="flex space-x-8">
+                            @foreach ($appartement->images as $image)
+                                <div class="relative">
+                                    <img class="rounded-md mb-3 h-52" src="{{ Storage::url($image->image) }}"
+                                        width="200px">
+                                    <form method="POST" action="{{ route('appart.destroyImg', $image) }}"
+                                        class="absolute top-2 right-2">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-500 hover:text-red-700">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                                fill="currentColor">
+                                                <path fill-rule="evenodd"
+                                                    d="M6 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zM5.293 9.293a1 1 0 011.414 0L10 13.586l3.293-3.293a1 1 0 111.414 1.414L11.414 15l3.293 3.293a1 1 0 01-1.414 1.414L10 16.414l-3.293 3.293a1 1 0 01-1.414-1.414L8.586 15 5.293 11.707a1 1 0 010-1.414z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

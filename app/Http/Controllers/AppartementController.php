@@ -144,7 +144,7 @@ class AppartementController extends Controller
 
 
         $appartement = Appartement::findOrFail($id);
-        $tags = Tag::all();
+        $tags = Tag::all()->where("user_id", Auth()->id());
         return view('appartements.edit', [
             'appartement' => $appartement,
             'tags' => $tags
@@ -222,10 +222,8 @@ class AppartementController extends Controller
         return redirect(url('/'));
     }
 
-    public function destroyImage($id) : RedirectResponse {
+    public function destroyImg($id) : RedirectResponse {
         $appartementImages = AppartementImage::findOrFail($id);
-
-        Gate::authorize('delete', $appartementImages->appartement_id);
 
         $appartementImages->delete();
 
