@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appartement;
+use App\Models\Fermeture;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -15,7 +16,6 @@ class ReservationController extends Controller
      */
     public function index()
     {
-
         $reservations = Reservation::where('user_id', Auth::id())->get();
         return view('Reservation.index', ['reservations' => $reservations]);
     }
@@ -37,7 +37,12 @@ class ReservationController extends Controller
             ->select("start_time","end_time")
             ->get();
 
+        $fermeture = Fermeture::where("appartement_id", $appartement_id)
+            ->select("start_time","end_time")
+            ->get();
+
         return view('Reservation.create', [
+            'fermetures' => $fermeture,
             'appartements' => $appartements,
             'selectedAppartement' => $selectedAppartement,
             'appartement_id' => $appartement_id,
@@ -54,20 +59,7 @@ class ReservationController extends Controller
     {
 
         $validatedData = $request->validate([
-            'start_time' => ['required',
-                'date',
-                'after_or_equal:today',
-            function ($value, $fail) use ($request) {
-                // Vérifier que la date ne se trouve pas dans un intervalle d'autres dates
-                $intervalles = Reservation::where('appartement_id', $request->route('appartement_id'))
-                    ->where('start_date', '<=', $value)
-                    ->where('end_date', '>=', $value)
-                    ->get();
-
-                if ($intervalles->isNotEmpty()) {
-                    $fail('La date se trouve dans un intervalle d\'autres dates.');
-                }
-            }],
+            'start_time' => ['required', 'date', 'after_or_equal:today'],
             'end_time' => ['required', 'date', 'after:start_date'],
             'nombre_de_personne' => ['required', 'numeric'],
             'appartement_id' => ['required', 'exists:appartements,id'],

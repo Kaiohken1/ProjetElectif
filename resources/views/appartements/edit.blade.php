@@ -18,10 +18,15 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            <div class="mt-6">
+                <a href="{{ route('fermeture.index', ['appartement' => $appartement->id]) }}" class="inline-block bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600">
+                    Voir les fermetures de cet appartement
+                </a>
+            </div>
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="max-w-xl">
                     <x-auth-session-status class="mb-4" :status="session('status')" />
-                    <form method="post" action="{{ route('appart.update', $appartement) }}" class="mt-6 space-y-6"
+                    <form method="post" action="{{ route('appart.update', $appartement->id) }}" class="mt-6 space-y-6"
                         enctype="multipart/form-data">
                         @csrf
                         @method('patch')
@@ -82,7 +87,7 @@
                                     <div class="relative">
                                         <img class="rounded-md mb-3" src="{{ Storage::url($image->image) }}"
                                             width="200px">
-                                        @if ($appartement->images->count() > 1)    
+                                        @if ($appartement->images->count() > 1)
                                         <form action="{{ route('appart.image.delete', ['id' => $image->id]) }}"
                                             method="POST" class="absolute top-0 right-0">
                                             @csrf

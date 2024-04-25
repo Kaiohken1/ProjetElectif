@@ -39,4 +39,8 @@ class Appartement extends Model
     public function reservations(): HasMany {
         return $this->hasMany(Reservation::class);
     }
+
+    public function fermetures(): HasMany {
+        return $this->hasMany(Fermeture::class);
+    }
 }

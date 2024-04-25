@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AppartementController;
+use App\Http\Controllers\FermetureController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservationController;
 use Illuminate\Support\Facades\Route;
@@ -12,6 +13,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('appart', AppartementController::class)->except(['index']);
+    Route::resource('fermeture', FermetureController::class)->except(['index']);
     Route::get('/dashboard', [AppartementController::class, 'userIndex'])->name('dashboard');
 
     Route::delete('/appart-image/{id}', [AppartementImageController::class, 'destroy'])->name('appart.image.delete');
@@ -24,8 +26,19 @@ Route::middleware('auth')->group(function () {
     Route::patch('/reservation/refused/{id}', [ReservationController::class, 'refused'])->name('reservation.refused');
     Route::get('/reservation/{id}', [ReservationController::class, 'showAll'])->name('reservation.showAll');
 
+    Route::prefix('appartement/{appartement}/edit')->group(function () {
+        Route::get('/fermetures', [FermetureController::class, 'index'])->name('fermeture.index');
+        Route::delete('/fermetures/{fermeture}', [FermetureController::class, 'destroy'])->name('fermeture.destroy');
+        Route::patch('/fermetures/{fermeture}', [FermetureController::class, 'update'])->name('fermeture.update');
+        Route::get('/fermetures/create', [FermetureController::class, 'create'])->name('fermeture.create');
+        Route::post('/fermetures', [FermetureController::class, 'store'])->name('fermeture.store');
+        // Autres routes pour l'édition de l'appartement
+    });
+
+
 });
 
 Route::get('/', [AppartementController::class, 'index'])->name('appart.index');
+
 
 require __DIR__ . '/auth.php';

@@ -94,16 +94,27 @@
         });
 
         var intervallesADesactiver = @json($intervalles);
+        var fermeturesADesactiver = @json($fermetures);
 
 
-        function estDansIntervalle(date, intervalles) {
+        function estDansIntervalle(date, intervalles, fermetures) {
+            var currentDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
             for (var i = 0; i < intervalles.length; i++) {
                 var startDate = new Date(intervalles[i].start_time);
                 var endDate = new Date(intervalles[i].end_time);
                 var intervalleStartDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
                 var intervalleEndDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
-                var currentDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
                 if (currentDate >= intervalleStartDate && currentDate <= intervalleEndDate) {
+                    return true;
+                }
+            }
+            for (var i = 0; i < fermetures.length; i++) {
+                var fermetureStart = new Date(fermetures[i].start_time);
+                var fermetureEnd = new Date(fermetures[i].end_time);
+                var trueFermetureStart = new Date(fermetureStart.getFullYear(), fermetureStart.getMonth(), fermetureStart.getDate());
+                var trueFermetureEnd = new Date(fermetureEnd.getFullYear(), fermetureEnd.getMonth(), fermetureEnd.getDate());
+                if (currentDate >= trueFermetureStart && currentDate <= trueFermetureEnd) {
                     return true;
                 }
             }
@@ -120,7 +131,7 @@
                 function(date) {
 
                 // Désactiver les dates dans les intervalles spécifiés
-                return estDansIntervalle(date, intervallesADesactiver);
+                return estDansIntervalle(date, intervallesADesactiver, fermeturesADesactiver);
                 }
             ]
         });
@@ -132,7 +143,7 @@
                 function(date) {
 
                     // Désactiver les dates dans les intervalles spécifiés
-                    return estDansIntervalle(date, intervallesADesactiver);
+                    return estDansIntervalle(date, intervallesADesactiver, fermeturesADesactiver);
                 }
             ]
         });
