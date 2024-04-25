@@ -3,17 +3,14 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Fermetures') }}
+            {{ __('Fermetures de l\'appartement') }}
         </h2>
+        <a href="{{ route('fermeture.create', ['appartement' => $appartement->id]) }}">
+                Ajouter une période de fermeture
+        </a>
     </x-slot>
+    
     <div class="py-8">
-        <h1 class="text-2xl font-semibold mb-4">Fermetures de l'appartement</h1>
-
-        <div class="mt-6">
-            <a href="{{ route('fermeture.create', ['appartement' => $appartement->id]) }}" class="inline-block bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600">
-                Choisir une période de fermeture
-            </a>
-        </div>
 
             <div class="overflow-x-auto">
                 <table class="w-full bg-white shadow-md rounded my-4">

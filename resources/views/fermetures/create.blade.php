@@ -6,16 +6,31 @@
             {{ __('Fermetures') }}
         </h2>
     </x-slot>
-    <div class="py-8">
-        <h1 class="text-2xl font-semibold mb-4">Choisir une période de fermeture</h1>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <div class="max-w-xl">
+                <h1 class="text-2xl font-semibold mb-4">Choisir une période de fermeture</h1>
             <div class="overflow-x-auto">
                 <form action="{{ route('fermeture.store', $appartement) }}" method="POST">
                     @csrf
-                    <input type="date" name="start_time" id="start_time" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    <input type="date" name="end_time" id="end_time" class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    <button type="submit" class="text-green-600 hover:text-green-900">Création</button>
+
+                    <x-input-label for="start_time" :value="__('Date de début')" />
+                    <x-text-input id="start_time" class="block mt-1 w-full" type="date" name="start_time"/>
+                    <x-input-error :messages="$errors->get('start_time')" class="mt-2" />
+
+                    <x-input-label for="end_time" :value="__('Date de fin')" />
+                    <x-text-input id="end_time" class="block mt-1 w-full" type="date" name="end_time"/>
+                    <x-input-error :messages="$errors->get('end_time')" class="mt-2" />
+
+                    <x-primary-button class="ms-3 mt-5 ml-0">
+                    {{ __('Ajouter une période de fermeture') }}
+                    </x-primary-button>
                 </form>
             </div>
+                </div>
+            </div>
+        </div>
     </div>
 </x-app-layout>
 <script>
