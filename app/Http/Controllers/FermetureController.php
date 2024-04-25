@@ -39,16 +39,15 @@ class FermetureController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request, $appartement)
-
     {
-
         $validatedData = $request->validate([
-            'start_dtime' => ['required', 'date'],
+            'start_time' => ['required', 'date'],
             'end_time' => ['required', 'date'],
-            'appartement_id' => $appartement,
         ]);
 
+
         $fermeture = new Fermeture($validatedData);
+        $fermeture->appartement_id = $appartement;
         $fermeture->save();
 
         $appartement = Appartement::findOrFail($appartement);
