@@ -18,10 +18,10 @@
                     <x-nav-link :href="route('appart.create')" :active="request()->routeIs('appart.create')">
                         {{ __('Louer mon logement') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('tag.index')" :active="request()->routeIs('appart.create')">
+                    <x-nav-link :href="route('tag.index')" :active="request()->routeIs('tag.index')">
                         {{ __('Catégories') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('tag.create')" :active="request()->routeIs('appart.create')">
+                    <x-nav-link :href="route('tag.create')" :active="request()->routeIs('tag.create')">
                         {{ __('Créer une catégorie') }}
                     </x-nav-link>
                 </div>
