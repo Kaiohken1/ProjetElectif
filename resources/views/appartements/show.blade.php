@@ -4,7 +4,8 @@
             <article>
                 <h1 class="text-3xl font-extrabold">{{ $appartement->name }}</h1>
                 @if (count($appartement->images) == 1)
-                    <img class="rounded-md h-96" src="{{ Storage::url($appartement->images->first()->image) }}" width="100%">
+                    <img class="rounded-md h-96" src="{{ Storage::url($appartement->images->first()->image) }}"
+                        width="100%">
                 @else
                     <div class="grid grid-cols-2 gap-2">
                         @foreach ($appartement->images as $image)
@@ -55,7 +56,8 @@
                             </div>
 
                             <div class="mb-4">
-                                <label for="nombre_de_personne" class="block text-gray-700 text-sm font-bold mb-2">Nombre de personnes :</label>
+                                <label for="nombre_de_personne"
+                                    class="block text-gray-700 text-sm font-bold mb-2">Nombre de personnes :</label>
                                 <input type="number" name="nombre_de_personne" id="nombre_de_personne"
                                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     min="1" max="{{ $appartement->guestCount }}">
@@ -63,7 +65,7 @@
                                     <p class="text-red-500 text-xs italic">{{ $message }}</p>
                                 @enderror
                             </div>
-                            
+
 
                             <div class="mb-4" id="total_price_container" style="display: none;">
                                 <p>Total : <span id="total_price">0 €</span></p>
@@ -102,65 +104,43 @@
             event.target.showPicker();
         });
 
-
         function updateTotalPrice() {
-    var startTime = new Date(document.getElementById('start_time').value);
-    var endTime = new Date(document.getElementById('end_time').value);
-    var numberOfPersons = parseInt(document.getElementById('nombre_de_personne').value);
-    var pricePerNight = parseFloat("{{ $appartement->price }}");
+            var startTime = new Date(document.getElementById('start_time').value);
+            var endTime = new Date(document.getElementById('end_time').value);
+            var numberOfPersons = parseInt(document.getElementById('nombre_de_personne').value);
+            var pricePerNight = parseFloat("{{ $appartement->price }}");
 
-    if (!isNaN(startTime) && !isNaN(endTime) && startTime < endTime && numberOfPersons > 0 && !isNaN(pricePerNight)) {
-        var numberOfNights = Math.ceil((endTime - startTime) / (1000 * 3600 * 24));
-        var totalPrice = numberOfNights * pricePerNight;
+            if (!isNaN(startTime) && !isNaN(endTime) && startTime < endTime && numberOfPersons > 0 && !isNaN(
+                    pricePerNight)) {
+                var numberOfNights = Math.ceil((endTime - startTime) / (1000 * 3600 * 24));
+                var totalPrice = numberOfNights * pricePerNight;
 
-        if (numberOfPersons > 1) {
-            totalPrice += (numberOfPersons - 1) * 0.1 * pricePerNight * numberOfNights;
+                if (numberOfPersons > 1) {
+                    totalPrice += (numberOfPersons - 1) * 0.1 * pricePerNight * numberOfNights;
+                }
+
+                document.getElementById('total_price').innerText = totalPrice.toFixed(2) + ' €';
+                document.getElementById('prix').value = totalPrice;
+                document.getElementById('total_price_container').style.display = 'block';
+            } else {
+                document.getElementById('total_price').innerText = '0€';
+                document.getElementById('prix').value = '';
+                document.getElementById('total_price_container').style.display = 'none';
+            }
         }
-
-        document.getElementById('total_price').innerText = totalPrice.toFixed(2) + ' €';
-        document.getElementById('prix').value = totalPrice;
-        document.getElementById('total_price_container').style.display = 'block'; 
-    } else {
-        document.getElementById('total_price').innerText = '0€';
-        document.getElementById('prix').value = '';
-        document.getElementById('total_price_container').style.display = 'none'; 
-    }
-}
-
-
-
-      
-        var reservedDates = @json($reservedDates);
 
         document.getElementById('start_time').addEventListener('change', disableReservedDates);
         document.getElementById('end_time').addEventListener('change', disableReservedDates);
 
         function disableReservedDates() {
-    var start = new Date(document.getElementById('start_time').value);
-    var end = new Date(document.getElementById('end_time').value);
+            var start = new Date(document.getElementById('start_time').value);
+            var end = new Date(document.getElementById('end_time').value);
 
-    var daysToDisable = [];
-
-    for (var d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-        var dateString = d.toISOString().split('T')[0];
-        daysToDisable.push(dateString);
-    }
-
-    reservedDates.forEach(function(dateRange) {
-        var startDate = new Date(dateRange.start);
-        var endDate = new Date(dateRange.end);
-
-        for (var currentDate = new Date(startDate); currentDate <= endDate; currentDate.setDate(currentDate.getDate() + 1)) {
-            var dateString = currentDate.toISOString().split('T')[0];
-            if (daysToDisable.includes(dateString)) {
-                var input = document.querySelector('input[type="date"][value="' + dateString + '"]');
-                if (input) {
-                    input.setAttribute('disabled', 'disabled');
-                }
+            if (end < start) {
+                alert("La date de fin ne peut pas être antérieure à la date de début.");
+                document.getElementById('end_time').value = '';
+                return;
             }
         }
-    });
-}
-
     });
 </script>

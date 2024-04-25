@@ -153,7 +153,7 @@ class ReservationController extends Controller
         $reservation->delete();
 
         return redirect()->route('reservation.index')
-            ->with('success', 'Reservation deleted successfully');
+            ->with('success', 'Reservation annulée');
     }
 
     public function validate($id)
