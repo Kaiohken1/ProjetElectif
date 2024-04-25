@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use id;
+use App\Models\Fermeture;
 use App\Models\Appartement;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
 use App\Models\AppartementImage;
 use Illuminate\Support\Facades\Auth;
@@ -100,8 +102,18 @@ class AppartementController extends Controller
     {
         $appartement = Appartement::findOrFail($id);
 
+        $intervalle = Reservation::where("appartement_id", $appartement->id)
+            ->select("start_time","end_time")
+            ->get();
+
+        $fermeture = Fermeture::where("appartement_id", $appartement->id)
+            ->select("start_time","end_time")
+            ->get();
+
         return view('appartements.show', [
-            'appartement' => $appartement
+            'appartement' => $appartement,
+            'fermetures' => $fermeture,
+            'intervalles' => $intervalle
         ]);
     }
 
