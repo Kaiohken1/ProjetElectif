@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="flex justify-center">
-        <div class="grid grid-cols-6 gap-6">
+        <div class="grid grid-cols-6 gap-6 w-9/12">
             @forelse ($appartements as $appartement)
                 
                 <div class="mt-9">
@@ -14,7 +14,6 @@
                             @foreach ($appartement->tags as $tag)
                                 <span class="bg-blue-100 text-blue-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">{{$tag->name}}</span>
                             @endforeach
-                            
                         </article>
                     </a>
                 </div>
