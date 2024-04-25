@@ -38,12 +38,10 @@
                                     <input type="date" name="end_time" id="end_time" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ date('Y-m-d', strtotime($fermeture->end_time)) }}">
                                 </td>
                                 <td class="py-3 px-6 text-left">
-                                    <!-- Bouton pour sauvegarder les modifications -->
                                     <button type="submit" class="text-green-600 hover:text-green-900">Sauvegarder</button>
                                 </td>
                             </form>
                             <td class="py-3 px-6 text-left">
-                                <!-- Formulaire pour supprimer la fermeture -->
                                 <form action="{{ route('fermeture.destroy', ['appartement' => $appartement->id, 'fermeture' => $fermeture->id]) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
@@ -52,29 +50,52 @@
                             </td>
                         </tr>
                     @endforeach
-
-
-                    </tbody>
-
-
-
-                    </tbody>
                 </table>
             </div>
     </div>
 </x-app-layout>
 <script>
 
+    function estDansIntervalle(date, intervalles) {
+
+        var currentDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+        for (var i = 0; i < intervalles.length; i++) {
+            var startDate = new Date(intervalles[i].start_time);
+            var endDate = new Date(intervalles[i].end_time);
+            var intervalleStartDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+            var intervalleEndDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+            if (currentDate >= intervalleStartDate && currentDate <= intervalleEndDate) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    var intervallesADesactiver = @json($intervalles);
+
+    console.log(intervallesADesactiver);
+
     var demain = new Date();
     demain.setDate(demain.getDate() + 1);
 
     flatpickr('#start_time', {
-        dateFormat: 'Y-m-d', // Format de la date
-        minDate: demain // Limiter la sélection aux dates postérieures à aujourd'hui
+        dateFormat: 'Y-m-d',
+        minDate: demain,
+        disable:[
+            function(date) {
+                return estDansIntervalle(date, intervallesADesactiver);
+            }
+        ]
     });
 
     flatpickr('#end_time', {
-        dateFormat: 'Y-m-d', // Format de la date
-        minDate: demain // Limiter la sélection aux dates postérieures à aujourd'hui
+        dateFormat: 'Y-m-d',
+        minDate: demain,
+        disable:[
+            function(date) {
+                return estDansIntervalle(date, intervallesADesactiver);
+            }
+        ]
     });
 </script>
