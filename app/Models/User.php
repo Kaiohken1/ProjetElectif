@@ -54,4 +54,8 @@ class User extends Authenticatable
     public function reservations(): HasMany {
         return $this->hasMany(Reservation::class);
     }
+
+    public function tags():HasMany {
+        return $this->hasMany(Tag::class);
+    }
 }

@@ -4,7 +4,7 @@
             <article>
                 <h1 class="text-3xl font-extrabold">{{ $appartement->name }}</h1>
                 @if (count($appartement->images) == 1)
-                    <img class="rounded-md h-96" src="{{ Storage::url($appartement->images->first()->image) }}"
+                    <img class="rounded-md" src="{{ Storage::url($appartement->images->first()->image) }}"
                         width="100%">
                 @else
                     <div class="grid grid-cols-2 gap-2">
@@ -18,6 +18,9 @@
                 @endif
                 <div class="flex justify-between mt-5">
                     <div class="mt-1">
+                        @foreach ($appartement->tags as $tag)
+                        <span class="bg-blue-900 text-blue-300 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-100 dark:text-blue-800">{{$tag->name}}</span>                    
+                        @endforeach
                         <p class="text-xl"><span>{{ $appartement->guestCount }} voyageurs</span> ·
                             <span>{{ $appartement->roomCount }} chambres</span>
                         </p>
@@ -86,8 +89,6 @@
                     <p class="text-2xl">{{ $appartement->description }}</p>
                 </div>
             </article>
-            @foreach ($appartement->tags as $tag)
-            <span class="bg-blue-900 text-blue-300 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-100 dark:text-blue-800">{{$tag->name}}</span>                    @endforeach
         </div>
     </div>
 </x-app-layout>

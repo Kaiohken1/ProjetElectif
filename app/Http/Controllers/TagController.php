@@ -16,6 +16,7 @@ class TagController extends Controller
     {
         $tags = Tag::query()
             ->select(['id', 'name'])
+            ->where("user_id", Auth()->id())
             ->latest()
             ->paginate(10);
 
@@ -40,8 +41,11 @@ class TagController extends Controller
         $validateData = $request->validate([
             'name' => ['required', 'alpha']
         ]);
+
+        $validateData['user_id'] = Auth()->id();
     
         $tag = new Tag($validateData);
+        $tag->user()->associate($validateData['user_id']);
         $tag->save();
 
         return redirect()->route('tag.index')

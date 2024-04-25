@@ -3,6 +3,10 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Gestion des tags') }}
         </h2>
+
+        <x-nav-link :href="route('tag.create')" :active="request()->routeIs('tag.create')">
+            {{ __('Créer un tag') }}
+        </x-nav-link>
     </x-slot>
     <div class="flex justify-center">
             @forelse ($tags as $tag)

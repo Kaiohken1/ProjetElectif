@@ -22,10 +22,7 @@
                         {{ __('Mes réservations') }}
                     </x-nav-link>
                     <x-nav-link :href="route('tag.index')" :active="request()->routeIs('tag.index')">
-                        {{ __('Catégories') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('tag.create')" :active="request()->routeIs('tag.create')">
-                        {{ __('Créer une catégorie') }}
+                        {{ __('Mes Tags') }}
                     </x-nav-link>
                 </div>
             </div>
