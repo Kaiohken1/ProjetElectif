@@ -79,6 +79,14 @@
         document.getElementById('end_time').addEventListener('change', updateTotalPrice);
         document.getElementById('nombre_de_personne').addEventListener('input', updateTotalPrice);
 
+        document.getElementById("start_time").addEventListener('focus', function(event) {
+            event.target.showPicker();
+        });
+
+        document.getElementById("end_time").addEventListener('focus', function(event) {
+            event.target.showPicker();
+        });
+
 
         function updateTotalPrice() {
     var startTime = new Date(document.getElementById('start_time').value);

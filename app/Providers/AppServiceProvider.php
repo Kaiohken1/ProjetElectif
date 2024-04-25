@@ -25,10 +25,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Event::listen(
-            Reservation::class,
-            ReservationNotifcation::class,
-        );
 
         View::composer('layouts.navigation', function ($view) {
             if (Auth::check()) {
