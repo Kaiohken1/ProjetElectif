@@ -20,7 +20,7 @@ return new class extends Migration
             $table->dateTime('start_time');
             $table->dateTime('end_time');
             $table->integer('nombre_de_personne');
-            $table->string('status')->default('pending');
+            $table->string('status')->default('en attente');
             $table->integer('prix');
             $table->timestamps();
         });

@@ -2,8 +2,9 @@
     <div class="flex justify-center">
         <div class="mt-9 ml-11">
             <article>
+                <h1 class="text-3xl font-extrabold">{{ $appartement->name }}</h1>
                 @if (count($appartement->images) == 1)
-                    <img class="rounded-md" src="{{ Storage::url($appartement->images->first()->image) }}" width="100%">
+                    <img class="rounded-md h-96" src="{{ Storage::url($appartement->images->first()->image) }}" width="100%">
                 @else
                     <div class="grid grid-cols-2 gap-2">
                         @foreach ($appartement->images as $image)
@@ -14,16 +15,15 @@
                         @endforeach
                     </div>
                 @endif
-                <div class="flex justify-between mt-2">
+                <div class="flex justify-between mt-5">
                     <div class="mt-1">
-                        <h1 class="text-3xl font-extrabold">{{ $appartement->name }}</h1>
                         <p class="text-xl"><span>{{ $appartement->guestCount }} voyageurs</span> ·
                             <span>{{ $appartement->roomCount }} chambres</span>
                         </p>
                         <p class="text-xl">{{ $appartement->address }}</p>
                         <p class="text-xl">Loué par {{ $appartement->user->name }}</p>
                     </div>
-                    <div class="p-4 sm:p-8 bg-white sm:rounded-lg shadow-xl">
+                    <div class="p-4 sm:p-8 ml-20 bg-white sm:rounded-lg shadow-xl">
                         <p class="text-xl"><span class="font-extrabold">{{ $appartement->price }}€</span> par nuit</p>
 
                         <form method="POST" action="{{ route('reservation.store') }}">

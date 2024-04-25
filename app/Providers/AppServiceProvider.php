@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
         View::composer('layouts.navigation', function ($view) {
             if (Auth::check()) {
                 $user = User::findOrFail(Auth()->id());
-                $notifications = $user->notifications()->latest()->paginate(10);
+                $notifications = $user->notifications()->latest()->take(5)->get();
                 $view->with('notifications', $notifications)
                      ->with('user', $user);
             }

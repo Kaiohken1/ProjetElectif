@@ -38,7 +38,7 @@
                             <td class="py-3 px-6 text-left">{{ \Carbon\Carbon::parse($reservation->end_time)->format('d/m/Y') }}</td>
                             <td class="py-3 px-6 text-left">{{ \Carbon\Carbon::parse($reservation->created_at)->format('d/m/Y H:i:s') }}</td>
                             <td class="py-3 px-6 text-left">{{ $reservation->status }}</td>
-                            @if ($reservation->status === 'pending')
+                            @if ($reservation->status === 'en attente')
                                 <td class="py-3 px-6 text-center">
                                     <form method="POST" action="{{ route('reservation.validate', $reservation) }}"
                                         class="inline">

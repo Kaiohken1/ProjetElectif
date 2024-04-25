@@ -34,7 +34,7 @@
                             <th class="py-3 px-6 text-left">Date de fin</th>
                             <th class="py-3 px-6 text-left">Date de réservation</th>
                             <th class="py-3 px-6 text-left">Statut</th>
-                            <th class="py-3 px-6 text-left"></th> 
+                            <th class="py-3 px-6 text-center">Action</th> 
                         </tr>
                     </thead>
                     @foreach ($reservations as $reservation)
@@ -46,7 +46,7 @@
                                 <td class="py-3 px-6 text-left">{{ \Carbon\Carbon::parse($reservation->end_time)->format('d/m/Y') }}</td>
                                 <td class="py-3 px-6 text-left">{{ \Carbon\Carbon::parse($reservation->created_at)->format('d/m/Y H:i:s') }}</td>
                                 <td class="py-3 px-6 text-left">{{ $reservation->status }}</td>
-                                <td class="py-3 px-6 text-left">
+                                <td class="py-3 px-6 text-center">
                                     @if (\Carbon\Carbon::now()->subHours(48)->isBefore($reservation->start_time)) 
                                         <form action="{{ route('reservation.cancel', $reservation->id) }}" method="POST">
                                             @csrf

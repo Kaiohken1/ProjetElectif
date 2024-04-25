@@ -7,7 +7,7 @@
                     <a href="{{ route('appart.show', $appartement) }}" class="block">
                         <article>
                             @if ($appartement->images->isNotEmpty())
-                                <img class="rounded-md" src="{{ Storage::url($appartement->images->first()->image) }}" width="200px">
+                                <img class="rounded-md" src="{{ Storage::url($appartement->images->first()->image) }}" width="250px" style="height: 250px !important">
                             @else
                                 <p>Aucune image disponible</p>
                             @endif
