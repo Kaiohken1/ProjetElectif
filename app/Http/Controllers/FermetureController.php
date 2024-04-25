@@ -61,10 +61,6 @@ class FermetureController extends Controller
             'end_time' => ['required', 'date', 'after:start_time'],
         ]);
 
-        if ($validator->fails()) {
-            dd($validator->errors());
-        }
-
         $validatedData = $validator->validated();
 
         $fermeture = new Fermeture();
@@ -106,10 +102,6 @@ class FermetureController extends Controller
             'start_time' => ['required', 'date', 'after_or_equal:today'],
             'end_time' => ['required', 'date', 'after:start_time'],
         ]);
-
-        if ($validator->fails()) {
-            dd($validator->errors());
-        }
 
         $validatedData = $validator->validated();
 
