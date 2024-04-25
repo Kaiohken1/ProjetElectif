@@ -182,6 +182,8 @@ class AppartementController extends Controller
 
         if(isset($validatedData['tag_id'])){
             $appartement->tags()->sync($validatedData['tag_id']);
+        } else {
+                $appartement->tags()->detach();
         }
     
         return redirect()->route('appart.edit', $appartement->id)

@@ -72,12 +72,13 @@ class TagController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $tag = Tag::findOrFail($id);
         $validateData = $request->validate([
             'name' => ['required']
         ]);
     
-        $tag = new Tag($validateData);
-        $tag->save();
+
+        $tag->update($validateData);
 
         return redirect()->route('tag.index')
             ->with('success', "Tag mis à jour avec succès");
