@@ -4,7 +4,7 @@
             @forelse ($appartements as $appartement)
                 <div class="mt-9 ml-11">
                     <article>
-                        <img class="rounded-md" src="{{ Storage::url($appartement->images->first()->image) }}" width="200px">
+{{--                        <img class="rounded-md" src="{{ Storage::url($appartement->images->first()->image) }}" width="200px">--}}
                         <h1 class="text-2xl font-extrabold">{{ $appartement->name }}</h1>
                         <p>{{ $appartement->address }}</p>
                         <p>Loué par {{ $appartement->user->name }}</p>

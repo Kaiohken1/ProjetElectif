@@ -29,18 +29,20 @@ class ReservationController extends Controller
 
         $appartement_id = $request->route('appartement_id');
 
-        // if (!$appartement_id) {
-        // }
-
         $selectedAppartement = Appartement::find($appartement_id);
         $appartements = Appartement::all();
         $prixAppartement = $selectedAppartement->prix;
+
+        $intervalle = Reservation::where("appartement_id", $appartement_id)
+            ->select("start_time","end_time")
+            ->get();
 
         return view('Reservation.create', [
             'appartements' => $appartements,
             'selectedAppartement' => $selectedAppartement,
             'appartement_id' => $appartement_id,
             'prixAppartement' => $prixAppartement,
+            'intervalles' => $intervalle,
         ]);
     }
 
@@ -50,12 +52,24 @@ class ReservationController extends Controller
      */
     public function store(Request $request)
     {
-        //  dd($request->all());
+
         $validatedData = $request->validate([
-            'start_time' => ['required', 'date'],
-            'end_time' => ['required', 'date'],
+            'start_time' => ['required',
+                'date',
+                'after_or_equal:today',
+            function ($value, $fail) use ($request) {
+                // Vérifier que la date ne se trouve pas dans un intervalle d'autres dates
+                $intervalles = Reservation::where('appartement_id', $request->route('appartement_id'))
+                    ->where('start_date', '<=', $value)
+                    ->where('end_date', '>=', $value)
+                    ->get();
+
+                if ($intervalles->isNotEmpty()) {
+                    $fail('La date se trouve dans un intervalle d\'autres dates.');
+                }
+            }],
+            'end_time' => ['required', 'date', 'after:start_date'],
             'nombre_de_personne' => ['required', 'numeric'],
-            // 'commentaire' => ['max:255'],
             'appartement_id' => ['required', 'exists:appartements,id'],
             'prix' => ['required', 'numeric'],
         ]);
@@ -68,9 +82,8 @@ class ReservationController extends Controller
         $reservation->end_time = $validatedData['end_time'];
         $reservation->nombre_de_personne = $validatedData['nombre_de_personne'];
         $reservation->prix = $validatedData['prix'];
-        // $reservation->commentaire = $validatedData['commentaire'];
-
         $reservation->save();
+
         return redirect()->route('reservation.index')->with('success', "Réservation bien prise en compte");
     }
 
