@@ -85,6 +85,15 @@
                             <x-input-error :messages="$errors->get('image')" class="mt-2" />
                         </div>
 
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="multiple_files">Ajoutez des tags</label>
+                            <select class="chosen-select" multiple name="tag_id[]" id=tag_id>
+                                @foreach($tags as $tag)
+                                    <option value="{{$tag->id}}">{{$tag->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <x-primary-button class="ms-3 mt-5 ml-0">
                             {{ __('Modifier mon appartement') }}
                         </x-primary-button>

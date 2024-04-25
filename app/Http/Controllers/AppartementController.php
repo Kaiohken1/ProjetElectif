@@ -23,7 +23,9 @@ class AppartementController extends Controller
             ->select(['id', 'name', 'address', 'price', 'image', 'user_id'])
             ->latest()
             ->with(['user:id,name'])
-            ->with(['tags:*'])
+            ->with(['tags' => function ($query) {
+                $query->select('tags.*');   //pour filtrer si des appartements ont des tag ou non
+            }])
             ->with(['images:*'])
             ->paginate(10);
 
@@ -86,9 +88,10 @@ class AppartementController extends Controller
         $appartement = new Appartement($validateData);
         
         $appartement->user()->associate($validateData['user_id']);
-    
         $appartement->save();
-        $appartement->tags()->sync($validateData['tag_id']);
+        if(isset($validateData['tag_id'])){
+            $appartement->tags()->sync($validateData['tag_id']);
+        }
 
         if ($request->hasFile('image')) {
             $images = $request->file('image');
@@ -114,6 +117,7 @@ class AppartementController extends Controller
     {
         $appartement = Appartement::findOrFail($id);
 
+
         return view('appartements.show', [
             'appartement' => $appartement
         ]);
@@ -130,8 +134,10 @@ class AppartementController extends Controller
 
 
         $appartement = Appartement::findOrFail($id);
+        $tags = Tag::all();
         return view('appartements.edit', [
             'appartement' => $appartement,
+            'tags' => $tags
         ]);
     }
 
@@ -153,7 +159,8 @@ class AppartementController extends Controller
             'description' => ['required', 'max:255'],   
             'price' => ['required', 'numeric'],
             'image' => ['array'],
-            'image.*' => ['image'],   
+            'image.*' => ['image'],
+            'tag_id' => ['array'],
         ]);
 
         unset($validatedData['image']);
@@ -172,6 +179,10 @@ class AppartementController extends Controller
         }  
     
         $appartement->update($validatedData);
+
+        if(isset($validatedData['tag_id'])){
+            $appartement->tags()->sync($validatedData['tag_id']);
+        }
     
         return redirect()->route('appart.edit', $appartement->id)
             ->with('success', "Appartement mis à jour avec succès");
