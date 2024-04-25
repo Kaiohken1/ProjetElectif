@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use id;
+use Carbon\Carbon;
 use App\Models\Appartement;
-use App\Models\AppartementImage;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
+use App\Models\AppartementImage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\RedirectResponse;
@@ -66,11 +69,11 @@ class AppartementController extends Controller
 
         unset($validateData['image']);
     
-        $validateData['user_id'] = Auth()->id();
+        $validateData['users_id'] = Auth()->id();
     
         $appartement = new Appartement($validateData);
     
-        $appartement->user()->associate($validateData['user_id']);
+        $appartement->user()->associate($validateData['users_id']);
     
         $appartement->save();
     
@@ -82,10 +85,11 @@ class AppartementController extends Controller
                 
                 $appartementImage = new AppartementImage();
                 $appartementImage->image = $path;
-                $appartementImage->appartement_id = $appartement->id;
+                $appartementImage->appartement_id = $appartement->id; 
                 $appartementImage->save();
             }
-        }        
+        }
+         
     
         return redirect()->route('appart.index')
             ->with('success', "Appartement créé avec succès");
@@ -97,12 +101,20 @@ class AppartementController extends Controller
     public function show($id)
     {
         $appartement = Appartement::findOrFail($id);
-
-        return view('appartements.show', [
-            'appartement' => $appartement
-        ]);
+    
+        // Récupérer les dates déjà réservées pour cet appartement
+        $reservedDates = Reservation::where('appartement_id', $id)
+            ->get() // Récupérez toutes les réservations
+            ->map(function ($reservation) {
+                return [
+                    'start' => Carbon::parse($reservation->start_time)->toDateString(),
+                    'end' => Carbon::parse($reservation->end_time)->toDateString(),
+                ];
+            })
+            ->toArray();
+    
+        return view('appartements.show', compact('appartement', 'reservedDates'));
     }
-
     /**
      * Show the form for editing the specified resource.
      */
@@ -131,14 +143,15 @@ class AppartementController extends Controller
         $validatedData = $request->validate([
             'name' => ['required', 'string'],
             'address' => ['required', 'max:255'],
-            'surface' => ['required', 'numeric'],   
-            'guestCount' => ['required', 'numeric'],   
-            'roomCount' => ['required', 'numeric'],   
-            'description' => ['required', 'max:255'],   
-            'price' => ['required', 'numeric'],
+            'surface' => ['required', 'numeric', 'min:0'], 
+            'guestCount' => ['required', 'numeric', 'min:0'], 
+            'roomCount' => ['required', 'numeric', 'min:0'], 
+            'description' => ['required', 'max:255'],
+            'price' => ['required', 'numeric', 'min:0'], 
             'image' => ['array'],
-            'image.*' => ['image'],   
+            'image.*' => ['image'],
         ]);
+        
 
         unset($validatedData['image']);
 

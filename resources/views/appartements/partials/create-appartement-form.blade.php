@@ -16,26 +16,26 @@
 
     <div>
         <x-input-label for="surface" :value="__('Surface (Au mètre carré)')" />
-        <x-text-input id="surface" class="block mt-1 w-full" type="number" name="surface" />
+        <x-text-input id="surface" class="block mt-1 w-full" type="number" name="surface" min="1" />
         <x-input-error :messages="$errors->get('surface')" class="mt-2" />
     </div>
 
     <div>
         <x-input-label for="guestCount" :value="__('Nombre de personnes')" />
-        <x-text-input id="guestCount" class="block mt-1 w-full" type="number" name="guestCount" />
+        <x-text-input id="guestCount" class="block mt-1 w-full" type="number" name="guestCount" min="1" />
         <x-input-error :messages="$errors->get('guestCount')" class="mt-2" />
     </div>
 
 
     <div>
         <x-input-label for="roomCount" :value="__('Nombre de pièces')" />
-        <x-text-input id="roomCount" class="block mt-1 w-full" type="number" name="roomCount" />
+        <x-text-input id="roomCount" class="block mt-1 w-full" type="number" name="roomCount" min="1" />
         <x-input-error :messages="$errors->get('roomCount')" class="mt-2" />
     </div>
 
     <div>
         <x-input-label for="price" :value="__('Prix par nuit')" />
-        <x-text-input id="price" class="block mt-1 w-full" type="number" name="price" />
+        <x-text-input id="price" class="block mt-1 w-full" type="number" name="price"  min="1" />
         <x-input-error :messages="$errors->get('price')" class="mt-2" />
     </div>
 
