@@ -47,28 +47,29 @@
     var intervallesADesactiver = @json($intervalles);
     var fermeturesADesactiver = @json($fermetures);
 
+    console.log(intervallesADesactiver);
+    console.log(fermeturesADesactiver);
+
     var demain = new Date();
     demain.setDate(demain.getDate() + 1);
 
     flatpickr('#start_time', {
-        dateFormat: 'Y-m-d', // Format de la date
-        minDate: demain, // Limiter la sélection aux dates postérieures à aujourd'hui
-        function(date) {
-
-            // Désactiver les dates dans les intervalles spécifiés
-            return estDansIntervalle(date, intervallesADesactiver, fermeturesADesactiver);
-        }
-    });
-
-    flatpickr('#end_time', {
-        dateFormat: 'Y-m-d', // Format de la date
+        dateFormat: 'Y-m-d',
         minDate: demain,
         disable:[
             function(date) {
-
-                // Désactiver les dates dans les intervalles spécifiés
                 return estDansIntervalle(date, intervallesADesactiver, fermeturesADesactiver);
             }
-        ]// Limiter la sélection aux dates postérieures à aujourd'hui
+            ]
+    });
+
+    flatpickr('#end_time', {
+        dateFormat: 'Y-m-d',
+        minDate: demain,
+        disable:[
+            function(date) {
+                return estDansIntervalle(date, intervallesADesactiver, fermeturesADesactiver);
+            }
+        ]
     });
 </script>

@@ -32,7 +32,6 @@ Route::middleware('auth')->group(function () {
         Route::patch('/fermetures/{fermeture}', [FermetureController::class, 'update'])->name('fermeture.update');
         Route::get('/fermetures/create', [FermetureController::class, 'create'])->name('fermeture.create');
         Route::post('/fermetures', [FermetureController::class, 'store'])->name('fermeture.store');
-        // Autres routes pour l'édition de l'appartement
     });
 
 

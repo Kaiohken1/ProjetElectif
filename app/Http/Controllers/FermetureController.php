@@ -15,9 +15,18 @@ class FermetureController extends Controller
      */
     public function index(Appartement $appartement)
     {
+
+        $appartement_id = $appartement->id;
+
+        $intervalle = Reservation::where("appartement_id", $appartement_id)
+            ->select("start_time","end_time")
+            ->get();
+
+
         $fermetures = Fermeture::where('appartement_id', $appartement->id)->get();
         return view('fermetures.index', ['fermetures' => $fermetures,
-            'appartement' => $appartement]);
+                                                'appartement' => $appartement,
+                                                'intervalles' => $intervalle]);
     }
 
     /**
@@ -30,9 +39,14 @@ class FermetureController extends Controller
             ->select("start_time","end_time")
             ->get();
 
+        $fermeture = Fermeture::where("appartement_id", $appartement)
+            ->select("start_time","end_time")
+            ->get();
+
 
         return view('fermetures.create', ['appartement'=>$appartement,
-                                                'intervalle'=>$intervalle]);
+                                                'intervalles'=>$intervalle,
+                                                'fermetures'=>$fermeture]);
     }
 
     /**
