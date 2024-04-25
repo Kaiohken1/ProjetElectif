@@ -108,8 +108,8 @@ class ReservationController extends Controller
     {
 
         $validatedData = $request->validate([
-            'start_time' => ['required', 'date'],
-            'end_time' => ['required', 'date'],
+            'start_time' => ['required', 'date', 'after_or_equal:today'],
+            'end_time' => ['required', 'date', 'after:start_date'],
             'nombre_de_personne' => ['required', 'numeric'],
             'prix' => ['required', 'numeric'],
         ]);

@@ -7,6 +7,8 @@ use App\Models\Fermeture;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Validator;
+
 
 class FermetureController extends Controller
 {
@@ -54,13 +56,20 @@ class FermetureController extends Controller
      */
     public function store(Request $request, $appartement)
     {
-        $validatedData = $request->validate([
-            'start_time' => ['required', 'date'],
-            'end_time' => ['required', 'date'],
+        $validator = Validator::make($request->all(), [
+            'start_time' => ['required', 'date', 'after_or_equal:today'],
+            'end_time' => ['required', 'date', 'after:start_time'],
         ]);
 
+        if ($validator->fails()) {
+            dd($validator->errors());
+        }
 
-        $fermeture = new Fermeture($validatedData);
+        $validatedData = $validator->validated();
+
+        $fermeture = new Fermeture();
+        $fermeture->start_time = $validatedData['start_time'];
+        $fermeture->end_time = $validatedData['end_time'];
         $fermeture->appartement_id = $appartement;
         $fermeture->save();
 
@@ -89,12 +98,24 @@ class FermetureController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, $appartement, $fermeture)
-
     {
 
         $fermetures = Fermeture::findOrFail($fermeture);
 
-        $fermetures->update($request->only(['start_time', 'end_time']));
+        $validator = Validator::make($request->all(), [
+            'start_time' => ['required', 'date', 'after_or_equal:today'],
+            'end_time' => ['required', 'date', 'after:start_time'],
+        ]);
+
+        if ($validator->fails()) {
+            dd($validator->errors());
+        }
+
+        $validatedData = $validator->validated();
+
+        $fermetures->start_time = $validatedData['start_time'];
+        $fermetures->end_time = $validatedData['end_time'];
+        $fermetures->save();
 
         return redirect()->route('fermeture.index', $appartement)
             ->with('success', 'Reservation deleted successfully');
