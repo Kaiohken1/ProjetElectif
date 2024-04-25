@@ -5,13 +5,15 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Fermetures de l\'appartement') }}
         </h2>
-        <a href="{{ route('fermeture.create', ['appartement' => $appartement->id]) }}">
-                Ajouter une période de fermeture
-        </a>
+        <x-nav-link :href="route('fermeture.create', ['appartement' => $appartement->id])">
+            {{ __('Ajouter une période de fermeture') }}
+        </x-nav-link>
     </x-slot>
-    
-    <div class="py-8">
 
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <h1 class="text-2xl font-semibold mb-4">Choisir une période de fermeture</h1>
             <div class="overflow-x-auto">
                 <table class="w-full bg-white shadow-md rounded my-4">
                     <thead>
@@ -25,6 +27,7 @@
                     <tbody class="text-gray-600 text-sm font-light">
                     @foreach($fermetures as $fermeture)
                         <tr class="border-b border-gray-200 hover:bg-gray-100">
+                            <div class="flex items-center">
                             <form action="{{ route('fermeture.update', ['appartement' => $appartement->id, 'fermeture' => $fermeture->id]) }}" method="POST">
                                 @csrf
                                 @method('PATCH')
@@ -35,19 +38,27 @@
                                     <input type="date" name="end_time" id="end_time" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ date('Y-m-d', strtotime($fermeture->end_time)) }}">
                                 </td>
                                 <td class="py-3 px-6 text-left">
-                                    <button type="submit" class="text-green-600 hover:text-green-900">Sauvegarder</button>
+                                    <x-primary-button class="ms-3 mt-5 ml-0">
+                                        {{ __('Sauvegarder') }}
+                                    </x-primary-button>
                                 </td>
                             </form>
+                            </div>
                             <td class="py-3 px-6 text-left">
                                 <form action="{{ route('fermeture.destroy', ['appartement' => $appartement->id, 'fermeture' => $fermeture->id]) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900">Supprimer</button>
+                                    <x-primary-button class="ms-3 mt-5 ml-0">
+                                        {{ __('Supprimer') }}
+                                    </x-primary-button>
                                 </form>
                             </td>
                         </tr>
                     @endforeach
                 </table>
+            </div>
+            </div>
+            </div>
             </div>
     </div>
 </x-app-layout>
