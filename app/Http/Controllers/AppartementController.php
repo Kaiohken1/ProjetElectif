@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use id;
 use Carbon\Carbon;
 use App\Models\Appartement;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
+use App\Models\Tag;
 use App\Models\AppartementImage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -20,15 +20,27 @@ class AppartementController extends Controller
      */
     public function index()
     {
+        
         $appartements = Appartement::query()
             ->select(['id', 'name', 'address', 'price', 'image', 'user_id'])
             ->latest()
             ->with(['user:id,name'])
+            ->with(['tags' => function ($query) {
+                $query->select('tags.*');   //pour filtrer si des appartements ont des tag ou non
+            }])
+            ->with(['images:*'])
             ->paginate(10);
 
         return view('appartements.index', [
             'appartements' => $appartements
         ]);
+        
+
+       /* $appartements = Appartement::with('tags','images','user');
+        return view('appartements.index', [
+            'appartements' => $appartements
+        ]);
+        */
     }
 
     public function userIndex()
@@ -36,7 +48,7 @@ class AppartementController extends Controller
     $user = Auth::user();
 
     $appartements = $user->appartement;
-
+    
     return view('appartements.userIndex', [
         'appartements' => $appartements
     ]);
@@ -47,7 +59,10 @@ class AppartementController extends Controller
      */
     public function create()
     {
-        return view('appartements.create');
+        $tags = Tag::all();
+        return view('appartements.create',[
+            'tags' => $tags
+        ]);
     }
 
     /**
@@ -64,19 +79,22 @@ class AppartementController extends Controller
             'description' => ['required', 'max:255'],   
             'price' => ['required', 'numeric'],
             'image' => ['array'],
-            'image.*' => ['image'],  
+            'image.*' => ['image'],
+            'tag_id' => ['array']
         ]);
 
         unset($validateData['image']);
     
-        $validateData['users_id'] = Auth()->id();
+        $validateData['user_id'] = Auth()->id();
     
         $appartement = new Appartement($validateData);
-    
-        $appartement->user()->associate($validateData['users_id']);
-    
+        
+        $appartement->user()->associate($validateData['user_id']);
         $appartement->save();
-    
+        if(isset($validateData['tag_id'])){
+            $appartement->tags()->sync($validateData['tag_id']);
+        }
+
         if ($request->hasFile('image')) {
             $images = $request->file('image');
             
@@ -126,8 +144,10 @@ class AppartementController extends Controller
 
 
         $appartement = Appartement::findOrFail($id);
+        $tags = Tag::all();
         return view('appartements.edit', [
             'appartement' => $appartement,
+            'tags' => $tags
         ]);
     }
 
@@ -150,6 +170,7 @@ class AppartementController extends Controller
             'price' => ['required', 'numeric', 'min:0'], 
             'image' => ['array'],
             'image.*' => ['image'],
+            'tag_id' => ['array'],
         ]);
         
 
@@ -176,6 +197,12 @@ class AppartementController extends Controller
         }  
     
         $appartement->update($validatedData);
+
+        if(isset($validatedData['tag_id'])){
+            $appartement->tags()->sync($validatedData['tag_id']);
+        } else {
+                $appartement->tags()->detach();
+        }
     
         return redirect()->route('appart.edit', $appartement->id)
             ->with('success', "Appartement mis à jour avec succès");

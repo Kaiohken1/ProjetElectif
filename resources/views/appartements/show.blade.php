@@ -79,13 +79,15 @@
                             </div>
                         </form>
                     </div>
+                    
                 </div>
-
                 <p class="mt-10">Description</p>
                 <div class="border-t-2 border-grey bg-white">
                     <p class="text-2xl">{{ $appartement->description }}</p>
                 </div>
             </article>
+            @foreach ($appartement->tags as $tag)
+            <span class="bg-blue-900 text-blue-300 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-100 dark:text-blue-800">{{$tag->name}}</span>                    @endforeach
         </div>
     </div>
 </x-app-layout>
