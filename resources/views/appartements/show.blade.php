@@ -81,7 +81,8 @@
                     </div>
                 </div>
 
-                <div class="border-t-2 border-grey mt-10">
+                <p class="mt-10">Description</p>
+                <div class="border-t-2 border-grey bg-white">
                     <p class="text-2xl">{{ $appartement->description }}</p>
                 </div>
             </article>
