@@ -30,7 +30,7 @@
                     </div>
                 @endif
                 <div class="flex justify-between mt-5">
-                    <div class="mt-1">
+                    <div class="mt-1 w-80">
                         @foreach ($appartement->tags as $tag)
                         <span class="bg-blue-900 text-blue-300 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-100 dark:text-blue-800">{{$tag->name}}</span>                    
                         @endforeach
@@ -39,7 +39,12 @@
                         </p>
                         <p class="text-xl">{{ $appartement->address }}</p>
                         <p class="text-xl">Loué par {{ $appartement->user->name }}</p>
-                    </div>
+                    
+                        <p class="mt-10">Description</p>
+                        <div class="border-t-2 border-grey overflow-x-auto">
+                            <p class="text-xl">{{ $appartement->description }}</p>
+                        </div>
+                    </div>                    
                     <div class="p-4 sm:p-8 ml-20 bg-white sm:rounded-lg shadow-xl">
                         <p class="text-xl"><span class="font-extrabold">{{ $appartement->price }}€</span> par nuit</p>
 
@@ -95,12 +100,6 @@
                             </div>
                         </form>
                     </div>
-                    
-                </div>
-                <p class="mt-10">Description</p>
-                <div class="border-t-2 border-grey bg-white">
-                    <p class="text-2xl">{{ $appartement->description }}</p>
-                </div>
             </article>
         </div>
     </div>

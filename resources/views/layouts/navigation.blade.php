@@ -35,8 +35,8 @@
                             <button id="notification-icon"
                                 class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                                 <div class="ms-1">
-                                    <img src="votre-chemin-vers-l-image-sans-notifications.png"
-                                        alt="Icône de cloche de notification" id="notification-image">
+                                    <img src="{{ asset('logo/bell.svg') }}"
+                                        alt="" id="notification-image">
                                 </div>
                             </button>
                         </x-slot>
@@ -155,7 +155,7 @@
     </div>
 </nav>
 
-
+{{-- 
 @if(isset($notifications))
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -178,4 +178,4 @@
         updateNotificationIcon();
     });
 </script>
-@endif
+@endif --}}

@@ -6,8 +6,6 @@
                 <article>
                     <img class="rounded-md" src="{{ Storage::url($appartement->images->first()->image) }}" width="200px">
                     <h1 class="text-2xl font-extrabold">{{ $appartement->name }}</h1>
-                    <p>{{ $appartement->address }}</p>
-                    <p>Loué par {{ $appartement->user->name }}</p>
                     <p><span class="font-extrabold">{{ $appartement->price }}€</span> par nuit</p>
                     @foreach ($appartement->tags as $tag)
                         <span class="bg-blue-900 text-blue-300 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-100 dark:text-blue-800">{{$tag->name}}</span>                @endforeach

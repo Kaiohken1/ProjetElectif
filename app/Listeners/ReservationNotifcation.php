@@ -28,7 +28,7 @@ class ReservationNotifcation
     
         $reservation = ModelsReservation::findOrFail($reservationId);
     
-        $user = $reservation->user;
+        $user = $reservation->appartement->user;
     
         Notification::send($user, new NewReservation($event->reservation));    
     }
