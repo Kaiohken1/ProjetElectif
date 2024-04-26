@@ -16,14 +16,12 @@
                 <a href="{{ route('appart.edit', $appartement) }}" class="mr-2">
                     <x-primary-button>Editer</x-primary-button>
                 </a>
-
                         <form action="{{ route('appart.destroy', $appartement) }}" method="POST">
                             @csrf
                             @method('DELETE')
                             <x-danger-button> Supprimer</x-danger-button>
                         </form>
                     </div>
-    
                 <a href="{{ route('reservation.showAll', $appartement) }}" class="mr-2">
                     <x-primary-button>Réservations</x-primary-button>
                 </a>

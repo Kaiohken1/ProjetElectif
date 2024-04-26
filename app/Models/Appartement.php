@@ -45,4 +45,8 @@ class Appartement extends Model
     public function tags(): BelongsToMany {
         return $this->belongsToMany(Tag::class);
     }
+
+    public function fermetures(): HasMany {
+        return $this->hasMany(Fermeture::class);
+    }
 }

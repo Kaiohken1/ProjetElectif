@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\Fermeture;
 use App\Models\Appartement;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
@@ -59,7 +60,7 @@ class AppartementController extends Controller
      */
     public function create()
     {
-        $tags = Tag::all();
+        $tags = Tag::all()->where("user_id", Auth()->id());    
         return view('appartements.create',[
             'tags' => $tags
         ]);
@@ -119,19 +120,32 @@ class AppartementController extends Controller
     public function show($id)
     {
         $appartement = Appartement::findOrFail($id);
-    
-        // Récupérer les dates déjà réservées pour cet appartement
+
+        $intervalle = Reservation::where("appartement_id", $appartement->id)
+            ->select("start_time","end_time")
+            ->get();
+
+        $fermeture = Fermeture::where("appartement_id", $appartement->id)
+            ->select("start_time","end_time")
+            ->get();
+
+                    // Récupérer les dates déjà réservées pour cet appartement
         $reservedDates = Reservation::where('appartement_id', $id)
-            ->get() // Récupérez toutes les réservations
-            ->map(function ($reservation) {
-                return [
-                    'start' => Carbon::parse($reservation->start_time)->toDateString(),
-                    'end' => Carbon::parse($reservation->end_time)->toDateString(),
-                ];
-            })
-            ->toArray();
-    
-        return view('appartements.show', compact('appartement', 'reservedDates'));
+        ->get() // Récupérez toutes les réservations
+        ->map(function ($reservation) {
+            return [
+                'start' => Carbon::parse($reservation->start_time)->toDateString(),
+                'end' => Carbon::parse($reservation->end_time)->toDateString(),
+            ];
+        })
+        ->toArray();
+
+        return view('appartements.show', [
+            'appartement' => $appartement,
+            'fermetures' => $fermeture,
+            'intervalles' => $intervalle,
+            'reservedDates' => $reservedDates
+        ]);
     }
     /**
      * Show the form for editing the specified resource.

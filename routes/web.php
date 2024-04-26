@@ -1,9 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AppartementController;
+use App\Http\Controllers\FermetureController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservationController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\AppartementImageController;
@@ -16,6 +17,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('appart', AppartementController::class)->except(['index']);
     Route::resource('tag', TagController::class);
+    Route::resource('fermeture', FermetureController::class)->except(['index']);
     Route::get('/dashboard', [AppartementController::class, 'userIndex'])->name('dashboard');
 
     Route::delete('/appartimage/{id}', [AppartementController::class, 'destroyImg'])->name('appart.destroyImg');
@@ -28,11 +30,21 @@ Route::middleware('auth')->group(function () {
     Route::patch('/reservation/validate/{id}', [ReservationController::class, 'validate'])->name('reservation.validate');
     Route::patch('/reservation/refused/{id}', [ReservationController::class, 'refused'])->name('reservation.refused');
     Route::get('/reservation/{id}', [ReservationController::class, 'showAll'])->name('reservation.showAll');
+
+    Route::prefix('appartement/{appartement}/edit')->group(function () {
+        Route::get('/fermetures', [FermetureController::class, 'index'])->name('fermeture.index');
+        Route::delete('/fermetures/{fermeture}', [FermetureController::class, 'destroy'])->name('fermeture.destroy');
+        Route::patch('/fermetures/{fermeture}', [FermetureController::class, 'update'])->name('fermeture.update');
+        Route::get('/fermetures/create', [FermetureController::class, 'create'])->name('fermeture.create');
+        Route::post('/fermetures', [FermetureController::class, 'store'])->name('fermeture.store');
+    });
+
     Route::resource('notifcations', NotificationsController::class);
     Route::post('/reservation/{id}/cancel', [ReservationController::class, 'destroy'])->name('reservation.cancel');
 
 });
 
 Route::get('/', [AppartementController::class, 'index'])->name('appart.index');
+
 
 require __DIR__ . '/auth.php';

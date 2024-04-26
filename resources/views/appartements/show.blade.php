@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <x-app-layout>
     @if (session('success'))
     <div class="p-4 mb-3 mt-3 text-center text-sm text-green-800 rounded-lg bg-green-50 dark:text-green-600"
@@ -128,6 +130,7 @@
             if (!isNaN(startTime) && !isNaN(endTime) && startTime < endTime && numberOfPersons > 0 && !isNaN(
                     pricePerNight)) {
                 var numberOfNights = Math.ceil((endTime - startTime) / (1000 * 3600 * 24));
+
                 var totalPrice = numberOfNights * pricePerNight;
 
                 if (numberOfPersons > 1) {
@@ -158,4 +161,59 @@
             }
         }
     });
+
+
+    var intervallesADesactiver = @json($intervalles);
+        var fermeturesADesactiver = @json($fermetures);
+
+
+        function estDansIntervalle(date, intervalles, fermetures) {
+            var currentDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            for (var i = 0; i < intervalles.length; i++) {
+                var startDate = new Date(intervalles[i].start_time);
+                var endDate = new Date(intervalles[i].end_time);
+                var intervalleStartDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+                var intervalleEndDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+                if (currentDate >= intervalleStartDate && currentDate <= intervalleEndDate) {
+                    return true;
+                }
+            }
+            for (var i = 0; i < fermetures.length; i++) {
+                var fermetureStart = new Date(fermetures[i].start_time);
+                var fermetureEnd = new Date(fermetures[i].end_time);
+                var trueFermetureStart = new Date(fermetureStart.getFullYear(), fermetureStart.getMonth(), fermetureStart.getDate());
+                var trueFermetureEnd = new Date(fermetureEnd.getFullYear(), fermetureEnd.getMonth(), fermetureEnd.getDate());
+                if (currentDate >= trueFermetureStart && currentDate <= trueFermetureEnd) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        var demain = new Date();
+        demain.setDate(demain.getDate() + 1);
+
+        flatpickr('#start_time', {
+            dateFormat: 'Y-m-d', // Format de la date
+            minDate: demain, // Limiter la sélection aux dates postérieures à aujourd'hui
+            disable:[
+                function(date) {
+
+                // Désactiver les dates dans les intervalles spécifiés
+                return estDansIntervalle(date, intervallesADesactiver, fermeturesADesactiver);
+                }
+            ]
+        });
+
+        flatpickr('#end_time', {
+            dateFormat: 'Y-m-d', // Format de la date
+            minDate: demain, // Limiter la sélection aux dates postérieures à aujourd'hui
+            disable:[
+                function(date) {
+
+                    // Désactiver les dates dans les intervalles spécifiés
+                    return estDansIntervalle(date, intervallesADesactiver, fermeturesADesactiver);
+                }
+            ]
+        });
 </script>

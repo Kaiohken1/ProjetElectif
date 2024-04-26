@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appartement;
+use App\Models\Fermeture;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -33,18 +34,25 @@ class ReservationController extends Controller
 
         $appartement_id = $request->route('appartement_id');
 
-        // if (!$appartement_id) {
-        // }
-
         $selectedAppartement = Appartement::find($appartement_id);
         $appartements = Appartement::all();
         $prixAppartement = $selectedAppartement->prix;
 
+        $intervalle = Reservation::where("appartement_id", $appartement_id)
+            ->select("start_time","end_time")
+            ->get();
+
+        $fermeture = Fermeture::where("appartement_id", $appartement_id)
+            ->select("start_time","end_time")
+            ->get();
+
         return view('Reservation.create', [
+            'fermetures' => $fermeture,
             'appartements' => $appartements,
             'selectedAppartement' => $selectedAppartement,
             'appartement_id' => $appartement_id,
             'prixAppartement' => $prixAppartement,
+            'intervalles' => $intervalle,
         ]);
     }
 
@@ -56,8 +64,8 @@ class ReservationController extends Controller
 {
     
     $validatedData = $request->validate([
-        'start_time' => ['required', 'date'],
-        'end_time' => ['required', 'date'],
+        'start_time' => ['required', 'date', 'after_or_equal:today'],
+        'end_time' => ['required', 'date', 'after:start_date'],
         'nombre_de_personne' => ['required', 'numeric'],
         'appartement_id' => ['required', 'exists:appartements,id'],
         'prix' => ['required', 'numeric'],
@@ -122,8 +130,8 @@ class ReservationController extends Controller
     {
 
         $validatedData = $request->validate([
-            'start_time' => ['required', 'date'],
-            'end_time' => ['required', 'date'],
+            'start_time' => ['required', 'date', 'after_or_equal:today'],
+            'end_time' => ['required', 'date', 'after:start_date'],
             'nombre_de_personne' => ['required', 'numeric'],
             'prix' => ['required', 'numeric'],
         ]);

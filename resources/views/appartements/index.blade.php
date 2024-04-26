@@ -2,7 +2,7 @@
     <div class="flex justify-center">
         <div class="grid grid-cols-6 gap-6 w-9/12">
             @forelse ($appartements as $appartement)
-          
+
                 <div class="mt-9">
                     <a href="{{ route('appart.show', $appartement) }}" class="block">
                         <article>

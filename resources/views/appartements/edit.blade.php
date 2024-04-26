@@ -16,12 +16,18 @@
         @endif
     </x-slot>
 
-    <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            <div class="mt-6">
+                <x-primary-button class="ms-3 mt-5 ml-0">
+                    <a href="{{ route('fermeture.index', ['appartement' => $appartement->id]) }}">
+                        Voir les fermetures de cet appartement
+                    </a>
+                </x-primary-button>
+            </div>
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="max-w-xl">
                     <x-auth-session-status class="mb-4" :status="session('status')" />
-                    <form method="post" action="{{ route('appart.update', $appartement) }}" class="mt-6 space-y-6"
+                    <form method="post" action="{{ route('appart.update', $appartement->id) }}" class="mt-6 space-y-6"
                         enctype="multipart/form-data">
                         @csrf
                         @method('patch')
@@ -105,6 +111,7 @@
                                 <div class="relative">
                                     <img class="rounded-md mb-3 h-52" src="{{ Storage::url($image->image) }}"
                                         width="200px">
+                                    @if($appartement->images->count() > 1)
                                     <form method="POST" action="{{ route('appart.destroyImg', $image) }}"
                                         class="absolute top-2 right-2">
                                         @csrf
@@ -118,6 +125,7 @@
                                             </svg>
                                         </button>
                                     </form>
+                                    @endif
                                 </div>
                             @endforeach
                         </div>
