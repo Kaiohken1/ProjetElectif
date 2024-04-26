@@ -156,6 +156,7 @@
 </nav>
 
 
+@if(isset($notifications))
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var notificationImage = document.getElementById('notification-image');
@@ -172,7 +173,9 @@
                 notificationImage.src = imagePath1;
             }
         }
+    }
 
         updateNotificationIcon();
     });
 </script>
+@endif
